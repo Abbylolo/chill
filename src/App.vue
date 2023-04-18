@@ -1,23 +1,54 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <el-menu
+      :default-active="activeIndex"
+      mode="horizontal"
+      @select="handleSelect"
+      background-color="#333"
+      text-color="#fff"
+      active-text-color="#f3f085"
+    >
+      <el-menu-item index="Homepage">社区</el-menu-item>
+      <el-menu-item index="PhotoCircle">摄影圈</el-menu-item>
+      <el-menu-item index="User">个人主页</el-menu-item>
+    </el-menu>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App",
+  data() {
+    return {
+      activeIndex: "Homepage"
+    };
+  },
+  methods: {
+    handleSelect(routeName) {
+      this.$router.push({
+        name: routeName
+      });
+    }
+  }
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  /* color: #f3f085; */
+}
+</style>
+
+<style scoped>
+#app >>> .el-menu.el-menu--horizontal {
+  border-bottom: none;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
 }
 </style>
