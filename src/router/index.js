@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 // pages为文件夹=》pages目录下package.json文件main字段指定的js文件不存在 =》index.js存在 =》执行（.js优先级 〉.vue）
-import { Homepage, PhotoCircle, User } from "@/pages";
+import { Homepage, PhotoCircle, PhotoCircleDetail, User } from "@/pages";
 // import Homepage from "@/pages/Homepage";
 
 Vue.use(Router);
@@ -20,6 +20,14 @@ export default new Router({
       path: "/photo-circle",
       name: "PhotoCircle",
       component: PhotoCircle,
+      meta: {
+        title: "摄影圈"
+      }
+    },
+    {
+      path: "/photo-circle-detail",
+      name: "PhotoCircleDetail",
+      component: PhotoCircleDetail,
       meta: {
         title: "摄影圈"
       }

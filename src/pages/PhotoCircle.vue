@@ -24,7 +24,17 @@
         <div v-for="item in allCircleList" :key="item.circleId">
           <img :src="item.avatarUrl" alt="图片加载失败" />
           <div class="circle_info">
-            <p style="font-size: 18px; ">{{ item.name }}</p>
+            <p
+              style="font-size: 18px; "
+              @click="
+                $router.push({
+                  name: 'PhotoCircleDetail',
+                  params: { circleInfo: item }
+                })
+              "
+            >
+              {{ item.name }}
+            </p>
             <p style="font-size: 12px; margin: 0;">{{ item.fansNum }}粉丝</p>
             <p>简介：{{ item.brief }}</p>
           </div>
@@ -97,7 +107,7 @@ export default {
         {
           circleId: "2",
           avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           name: "喵星人保护队",
           fansNum: 3000,
           brief:

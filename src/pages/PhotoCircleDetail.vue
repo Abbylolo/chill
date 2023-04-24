@@ -1,27 +1,39 @@
 <template>
   <div class="bac">
     <header>
-      <img class="avatar" :src="userInfo.avatar" alt="图片加载失败" />
-      <div>
-        <p style="margin: 0;">{{ userInfo.name }}</p>
-        <p style="font-size: 12px;margin: 4px;">{{ userInfo.brief }}</p>
+      <img class="avatar" :src="circleInfo.avatarUrl" alt="图片加载失败" />
+      <div class="circle_info">
+        <div>
+          <span class="circle_name">{{ circleInfo.name }}</span>
+          <span style="font-size: 15px;">{{ circleInfo.fansNum }}圈友</span>
+        </div>
+        <div class="circle_brief">简介：{{ circleInfo.brief }}</div>
       </div>
+      <el-button type="warning" plain
+        ><i class="el-icon-plus el-icon--left"></i>加入</el-button
+      >
     </header>
     <main>
       <el-card v-for="item in postList" :key="item.id">
         <div class="card_left">
-          <div style="font-size: 22px;font-weight: bold; margin: 18px 0;">
-            {{ item.createTime }}
+          <div class="user_info">
+            <img
+              class="avatar_user"
+              :src="item.userAvatar"
+              alt="图片加载失败"
+            />
+            <span> {{ item.userName }}</span>
           </div>
           <div style="font-size: 14px;height: 75px; margin-bottom: 15px;">
             {{ item.postBrief }}
           </div>
           <div>
             <span style="margin-right:10px; cursor: pointer;">
-              <i class="el-icon-edit-outline el-icon--left"></i>编辑
+              <i class="el-icon-edit-outline el-icon--left"></i>{{ item.likes }}
             </span>
             <span style="cursor: pointer;">
-              <i class="el-icon-delete el-icon--left"></i>删除
+              <i class="el-icon-chat-dot-square el-icon--left"></i
+              >{{ item.comments.length }}
             </span>
           </div>
         </div>
@@ -59,46 +71,45 @@
 
 <script>
 export default {
-  name: "User",
+  name: "PhotoCircleDetail",
   data() {
     return {
-      translateXNum: 200,
-      userInfo: {
-        avatar: "",
+      circleInfo: {
+        circleId: "",
+        avatarUrl: "",
         name: "",
+        fansNum: 0,
         brief: ""
       },
       postList: [
         {
           id: "",
-          createTime: "",
+          userName: "",
+          userAvatar: "",
           postBrief: "",
-          imgUrls: [""],
-          translateX: 0
+          translateX: 0,
+          likes: 0,
+          comments: [],
+          imgUrls: []
         }
-      ]
+      ],
+      translateXNum: 200
     };
   },
   methods: {
-    // 获取用户信息
-    getUserInfo() {
-      // backend 获取用户信息（userid）=》用户头像、用户名、个人简介
-      this.userInfo = {
-        avatar:
-          "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-        name: "Abbylolo",
-        brief: "阳光开朗大男孩"
-      };
-    },
-    // 获取用户作品集
-    getUserWorks() {
-      // backend 获取用户作品集（userid) => 作品id，创建时间，作品简介,图片地址s
+    // 获取该摄影圈帖子列表
+    getpostList() {
+      // backend - 获取摄影圈帖子列表（摄影圈id）=》圈内帖子列表（id,用户名，用户头像，帖子简介，点赞数，评论，图片路径）
       this.postList = [
         {
           id: "0",
-          createTime: "2023年4月12日",
+          userName: "Abbylolo",
+          userAvatar:
+            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
+          likes: 30,
+          comments: ["aaa", "bbb"],
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -112,8 +123,12 @@ export default {
         },
         {
           id: "1",
-          createTime: "2023年4月12日",
+          userName: "Syhn",
+          userAvatar:
+            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief: "简单介绍介绍介简单介绍绍",
+          likes: 30,
+          comments: ["aaa", "bbb"],
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
@@ -121,9 +136,13 @@ export default {
         },
         {
           id: "2",
-          createTime: "2023年4月12日",
+          userName: "Lihua",
+          userAvatar:
+            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
+          likes: 30,
+          comments: ["aaa", "bbb"],
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -163,8 +182,8 @@ export default {
     }
   },
   mounted() {
-    this.getUserInfo();
-    this.getUserWorks();
+    this.circleInfo = this.$route.params.circleInfo;
+    this.getpostList();
   }
 };
 </script>
@@ -173,25 +192,22 @@ export default {
 .bac {
   width: 100%;
   min-height: 92.8vh;
-  background-color: #f7f6cac2;
   padding-top: 60px;
-  // position: fixed;
-}
-
-header,
-main {
-  margin: 20px;
+  background-color: #eee;
 }
 
 header {
   height: 160px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  background-color: #f7f6ca;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
 
-.avatar {
-  height: 120px;
-  width: 120px;
-  border-radius: 100px;
-  margin-right: 20px;
+main {
+  margin: 20px;
 }
 
 /deep/.el-card__body {
@@ -206,11 +222,56 @@ header {
   margin-bottom: 30px;
 }
 
+.avatar {
+  height: 110px;
+  width: 110px;
+  border-radius: 7px;
+  margin: 0 20px;
+}
+
+.avatar_user {
+  height: 50px;
+  width: 50px;
+  border-radius: 100px;
+  margin-right: 20px;
+}
+
+.circle_info {
+  width: 70%;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.circle_name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.circle_brief {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
 .card_left {
   margin: 0 30px;
   text-align: left;
   height: 100%;
   width: 25%;
+}
+
+.user_info {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 18px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .card_right {
