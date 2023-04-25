@@ -8,7 +8,12 @@
       text-color="#fff"
       active-text-color="#f3f085"
     >
-      <el-menu-item index="Homepage">社区</el-menu-item>
+      <el-menu-item disabled>
+        <img src="@/assets/logo.png" alt="logo" style="width:32px;" />
+      </el-menu-item>
+      <el-menu-item index="Homepage">
+        社区
+      </el-menu-item>
       <el-menu-item index="PhotoCircle">摄影圈</el-menu-item>
       <el-menu-item index="User">个人主页</el-menu-item>
     </el-menu>
@@ -44,11 +49,16 @@ export default {
 }
 </style>
 
-<style scoped>
-#app >>> .el-menu.el-menu--horizontal {
+<style lang="less" scoped>
+/deep/ .el-menu.el-menu--horizontal {
   border-bottom: none;
   position: fixed;
   width: 100%;
   z-index: 100;
+}
+
+/deep/ .el-menu-item.is-disabled {
+  opacity: 1;
+  cursor: default;
 }
 </style>

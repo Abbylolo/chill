@@ -9,7 +9,10 @@
         </div>
         <div class="circle_brief">简介：{{ circleInfo.brief }}</div>
       </div>
-      <el-button type="warning" plain
+      <el-button
+        type="warning"
+        plain
+        v-if="state !== 'created' && state !== 'joined'"
         ><i class="el-icon-plus el-icon--left"></i>加入</el-button
       >
     </header>
@@ -28,8 +31,18 @@
             {{ item.postBrief }}
           </div>
           <div>
-            <span style="margin-right:10px; cursor: pointer;">
-              <i class="el-icon-edit-outline el-icon--left"></i>{{ item.likes }}
+            <span class="likes" style="margin-right:10px; cursor: pointer;">
+              <img
+                v-if="item.liked"
+                src="@/assets/images/icons/liked.svg"
+                @click="like(item.id, false)"
+              />
+              <img
+                v-else
+                src="@/assets/images/icons/like.svg"
+                @click="like(item.id, true)"
+              />
+              <span>{{ item.likes }}</span>
             </span>
             <span style="cursor: pointer;">
               <i class="el-icon-chat-dot-square el-icon--left"></i
@@ -74,6 +87,7 @@ export default {
   name: "PhotoCircleDetail",
   data() {
     return {
+      state: "",
       circleInfo: {
         circleId: "",
         avatarUrl: "",
@@ -108,6 +122,7 @@ export default {
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
+          liked: true,
           likes: 30,
           comments: ["aaa", "bbb"],
           imgUrls: [
@@ -127,6 +142,7 @@ export default {
           userAvatar:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief: "简单介绍介绍介简单介绍绍",
+          liked: true,
           likes: 30,
           comments: ["aaa", "bbb"],
           imgUrls: [
@@ -141,6 +157,7 @@ export default {
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
+          liked: false,
           likes: 30,
           comments: ["aaa", "bbb"],
           imgUrls: [
@@ -179,10 +196,33 @@ export default {
         }
         idx++;
       });
+    },
+    // 点赞帖子/取消点赞
+    like(postId, flag) {
+      this.postList.forEach(item => {
+        if (item.id === postId) {
+          if (flag) {
+            item.likes++;
+            item.liked = true;
+          } else {
+            item.likes--;
+            item.liked = false;
+          }
+          return;
+        }
+      });
+      // backend 更新帖子点赞状态(postId,1)
     }
   },
   mounted() {
-    this.circleInfo = this.$route.params.circleInfo;
+    this.circleInfo = this.$route.params.circleInfo || {
+      circleId: "",
+      avatarUrl: "",
+      name: "",
+      fansNum: 0,
+      brief: ""
+    };
+    this.state = this.$route.params.state || "";
     this.getpostList();
   }
 };
@@ -272,6 +312,18 @@ main {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.likes {
+  right: 12px;
+  top: 12px;
+  height: 20px;
+}
+
+.likes img {
+  width: 16px;
+  height: 16px;
+  margin-bottom: -2px;
 }
 
 .card_right {

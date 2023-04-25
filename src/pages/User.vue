@@ -6,6 +6,9 @@
         <p style="margin: 0;">{{ userInfo.name }}</p>
         <p style="font-size: 12px;margin: 4px;">{{ userInfo.brief }}</p>
       </div>
+      <el-button type="info" round @click="post()"
+        ><i class="el-icon-plus el-icon--left"></i>发布帖子</el-button
+      >
     </header>
     <main>
       <el-card v-for="item in postList" :key="item.id">
@@ -160,7 +163,9 @@ export default {
         }
         idx++;
       });
-    }
+    },
+    // 发布帖子
+    post() {}
   },
   mounted() {
     this.getUserInfo();
@@ -192,6 +197,24 @@ header {
   width: 120px;
   border-radius: 100px;
   margin-right: 20px;
+}
+
+/deep/ .el-button--info.is-round {
+  color: #fff;
+  background: #2c2c2c;
+  border: none;
+}
+
+/deep/ .el-button--info.is-round:focus,
+.el-button--info.is-round:hover {
+  background: #222;
+  color: #fff;
+}
+
+header > button {
+  position: absolute;
+  right: 80px;
+  top: 143px;
 }
 
 /deep/.el-card__body {

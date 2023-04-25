@@ -1,20 +1,62 @@
 <template>
   <div class="main">
-    <!-- 我加入的摄影圈 -->
+    <!-- 我创立的摄影圈 -->
     <div class="my_circle_wrap">
-      <div class="title_bar">我加入的摄影圈</div>
+      <div class="title_bar">我创立的摄影圈</div>
       <div class="my_circle_detail">
+        <div v-if="myCircleList.length == 0">
+          <span>快来创建摄影圈吧！</span>
+        </div>
         <div
           class="circle_group"
           v-for="item in myCircleList"
           :key="item.circleId"
+          v-else
         >
           <img :src="item.avatarUrl" alt="图片加载失败" />
-          <p>{{ item.name }}</p>
+          <p
+            style="cursor: pointer;"
+            @click="
+              $router.push({
+                name: 'PhotoCircleDetail',
+                params: { circleInfo: item, state: 'created' }
+              })
+            "
+          >
+            {{ item.name }}
+          </p>
         </div>
         <el-button type="info" round @click="openCreateCircleMsg()"
           ><i class="el-icon-plus el-icon--left"></i>创建</el-button
         >
+      </div>
+    </div>
+    <!-- 我加入的摄影圈 -->
+    <div class="my_circle_wrap">
+      <div class="title_bar">我加入的摄影圈</div>
+      <div class="my_circle_detail">
+        <div v-if="joinedCircleList.length == 0">
+          <span>还没有加入摄影圈喔！</span>
+        </div>
+        <div
+          class="circle_group"
+          v-for="item in joinedCircleList"
+          :key="item.circleId"
+          v-else
+        >
+          <img :src="item.avatarUrl" alt="图片加载失败" />
+          <p
+            style="cursor: pointer;"
+            @click="
+              $router.push({
+                name: 'PhotoCircleDetail',
+                params: { circleInfo: item, state: 'joined' }
+              })
+            "
+          >
+            {{ item.name }}
+          </p>
+        </div>
       </div>
     </div>
     <!-- 发现摄影圈 -->
@@ -25,7 +67,7 @@
           <img :src="item.avatarUrl" alt="图片加载失败" />
           <div class="circle_info">
             <p
-              style="font-size: 18px; "
+              style="font-size: 18px; cursor: pointer;"
               @click="
                 $router.push({
                   name: 'PhotoCircleDetail',
@@ -38,7 +80,7 @@
             <p style="font-size: 12px; margin: 0;">{{ item.fansNum }}粉丝</p>
             <p>简介：{{ item.brief }}</p>
           </div>
-          <el-button type="warning" plain
+          <el-button type="warning" plain @click="joinCircle(item)"
             ><i class="el-icon-plus el-icon--left"></i>加入</el-button
           >
         </div>
@@ -55,13 +97,11 @@ export default {
   data() {
     return {
       circleId: 1,
-      myCircleList: [
-        {
-          circleId: "",
-          avatarUrl: "",
-          name: ""
-        }
-      ], // 我加入的摄影圈
+      // 我创立的摄影圈
+      myCircleList: [],
+      // 我加入的摄影圈
+      joinedCircleList: [],
+      // 所有摄影圈列表
       allCircleList: [
         {
           circleId: "",
@@ -74,21 +114,47 @@ export default {
     };
   },
   methods: {
-    // 获取用户加入的摄影圈
+    // 获取用户创立的摄影圈
     getMyCircleList() {
-      // backend 获取用户加入的摄影圈(userId) => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字）
+      // backend 获取用户创立的摄影圈(userId) => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介）
       this.myCircleList = [
         {
           circleId: "1",
           avatarUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "汪星人保护队"
+          name: "汪星人保护队",
+          fansNum: 2000,
+          brief: "啦啦啦啦啦啦啦啦啦啦"
         },
         {
           circleId: "2",
           avatarUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "喵星人保护队"
+          name: "喵星人保护队",
+          fansNum: 2000,
+          brief: "啦啦啦啦啦啦啦啦啦啦"
+        }
+      ];
+    },
+    // 获取用户加入的摄影圈
+    getJoinedCircleList() {
+      // backend 获取用户加入的摄影圈(userId) => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介）
+      this.joinedCircleList = [
+        {
+          circleId: "1",
+          avatarUrl:
+            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+          name: "汪星人保护队",
+          fansNum: 2000,
+          brief: "啦啦啦啦啦啦啦啦啦啦"
+        },
+        {
+          circleId: "2",
+          avatarUrl:
+            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+          name: "喵星人保护队",
+          fansNum: 2000,
+          brief: "啦啦啦啦啦啦啦啦啦啦"
         }
       ];
     },
@@ -130,35 +196,67 @@ export default {
       const h = this.$createElement;
       this.$msgbox({
         title: "创建摄影圈",
-        message: h(CreateCircle),
+        message: h("create-circle", { ref: "createCircle" }),
         showCancelButton: true,
         confirmButtonText: "创建",
         cancelButtonText: "取消",
         beforeClose: (action, instance, done) => {
+          const form = this.$refs.createCircle.form || {
+            name: "",
+            brief: "",
+            avatar: ""
+          };
+          console.log("form:", form);
           if (action === "confirm") {
-            console.log(this.$refs);
-            instance.confirmButtonLoading = true;
-            instance.confirmButtonText = "执行中...";
-            setTimeout(() => {
+            if (form.name == "" || form.brief == "") {
+              this.$message({
+                message: "请输入摄影圈名称及简介",
+                type: "warning"
+              });
               done();
+            } else {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = "执行中...";
               setTimeout(() => {
+                // 提交创建新摄影圈
+                // backend - 创建新摄影圈（...form）=>创建状态
+                this.$message({
+                  message: "创立摄影圈成功",
+                  type: "success"
+                });
+                done();
+                done();
                 instance.confirmButtonLoading = false;
-              }, 300);
-            }, 3000);
+              }, 3000);
+            }
           } else {
             done();
           }
         }
       }).then(action => {
+        this.$refs.createCircle.form = { name: "", brief: "", avatar: "" };
         this.$message({
-          type: "info",
-          message: "action: " + action
+          message: "创立摄影圈成功",
+          type: "success"
         });
       });
+    },
+    // 用户加入摄影圈
+    joinCircle(circle) {
+      const circleId = circle.circleId;
+      // backend - 用户加入摄影圈（circleId,userid) => 状态
+      // console.log("circleId", circleId);
+      if (true) {
+        this.$message({
+          message: `成功加入摄影圈${circle.name}`,
+          type: "success"
+        });
+      }
     }
   },
   mounted() {
     this.getMyCircleList();
+    this.getJoinedCircleList();
     this.getAllCircleList();
   }
 };
@@ -203,11 +301,16 @@ export default {
 .circle_list {
   background-color: #fff;
   display: flex;
-  padding: 0 30px 30px 30px;
   height: 100%;
 }
 .my_circle_detail {
   align-items: center;
+  padding: 0 30px;
+}
+
+.circle_list {
+  flex-direction: column;
+  padding: 0 30px 30px 30px;
 }
 
 .my_circle_detail >>> .el-button--info.is-round {
@@ -220,10 +323,6 @@ export default {
 .el-button--info.is-round:hover {
   background: #222;
   color: #fff;
-}
-
-.circle_list {
-  flex-direction: column;
 }
 
 .circle_list > div {
@@ -239,7 +338,6 @@ img {
   height: 110px;
   width: 110px;
   border-radius: 7px;
-  margin-right: 20px;
 }
 
 .my_circle_detail .el-button {
@@ -250,6 +348,7 @@ img {
 .circle_group {
   display: flex;
   flex-direction: column;
+  margin-right: 20px;
 }
 
 .circle_group p {

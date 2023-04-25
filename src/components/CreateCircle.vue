@@ -42,9 +42,7 @@ export default {
     };
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.form.avatar = URL.createObjectURL(file.raw);
-    },
+    // 头像图片限制
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -56,6 +54,11 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
+    },
+    // 头像上传成功
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+      this.form.avatar = URL.createObjectURL(file.raw);
     }
   }
 };

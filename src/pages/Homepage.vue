@@ -37,12 +37,12 @@
           <img
             v-if="post.liked"
             src="@/assets/images/icons/liked.svg"
-            @click="dislike(post.postId)"
+            @click="like(post.postId, false)"
           />
           <img
             v-else
             src="@/assets/images/icons/like.svg"
-            @click="like(post.postId)"
+            @click="like(post.postId, true)"
           />
           <span>{{ post.likes }}</span>
         </div>
@@ -209,27 +209,21 @@ export default {
         }
       ];
     },
-    // 点赞帖子
-    like(postId) {
+    // 点赞帖子/取消点赞
+    like(postId, flag) {
       this.postList.forEach(item => {
         if (item.postId === postId) {
-          item.likes++;
-          item.liked = true;
+          if (flag) {
+            item.likes++;
+            item.liked = true;
+          } else {
+            item.likes--;
+            item.liked = false;
+          }
           return;
         }
       });
       // backend 更新帖子点赞状态(postId,1)
-    },
-    // 取消点赞
-    dislike(postId) {
-      this.postList.forEach(item => {
-        if (item.postId === postId) {
-          item.likes--;
-          item.liked = false;
-          return;
-        }
-      });
-      // backend 更新帖子点赞状态(postId,-1)
     }
   },
   mounted() {
