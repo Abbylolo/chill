@@ -216,7 +216,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 /* 头部样式 */
 .white-mask {
   width: 100%;
@@ -246,6 +246,11 @@ header {
   z-index: 12;
 }
 
+/deep/ .el-input__inner {
+  border: 1px solid #2c2c2cab;
+  border-radius: 10px;
+}
+
 .keywordList {
   z-index: 12;
   left: 50%;
@@ -260,20 +265,20 @@ header {
   color: #fff;
 }
 
-.keywordList >>> .el-radio__input {
+/deep/ .el-radio__input {
   display: none;
 }
 
-.keywordList >>> .el-radio__input.is-checked + .el-radio__label {
+/deep/ .el-radio__input.is-checked + .el-radio__label {
   color: #fff;
 }
 
-.keywordList >>> .el-radio.is-bordered {
+/deep/ .el-radio.is-bordered {
   border: none;
 }
 
-header >>> .el-input.is-active .el-input__inner,
-header >>> .el-input__inner:focus {
+/deep/.el-input.is-active .el-input__inner,
+/deep/ .el-input__inner:focus {
   border-color: #333;
   outline: 0;
 }
