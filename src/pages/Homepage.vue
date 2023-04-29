@@ -32,7 +32,22 @@
     <!-- 主页面 -->
     <main>
       <div class="images_show" v-for="post in postList" :key="post.postId">
-        <img :src="post.imgUrl" class="image__lazy" alt="图片加载失败" />
+        <img
+          :src="post.imgUrl"
+          class="image__lazy"
+          alt="图片加载失败"
+          @click="showPostDetail = true"
+        />
+        <!-- 摄影贴详情弹窗 -->
+        <el-dialog
+          title="摄影贴详情"
+          :visible.sync="showPostDetail"
+          width="80%"
+          :before-close="postDetailClose"
+        >
+          <post-detail :postId="post.postId"></post-detail>
+        </el-dialog>
+
         <div class="likes">
           <img
             v-if="post.liked"
@@ -56,10 +71,13 @@
 </template>
 
 <script>
+import PostDetail from "@/components/PostDetail.vue";
 export default {
   name: "Homepage",
+  components: { PostDetail },
   data() {
     return {
+      showPostDetail: false,
       searchKeyword: "",
       listKeyword: "全部",
       keywordList: ["全部", "自然", "人物", "景观", "花卉"],
@@ -73,7 +91,7 @@ export default {
       console.log("searchKeyword", searchKeyword);
       this.postList = [
         {
-          postId: 0,
+          postId: "0",
           imgUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           author: "abbylolo",
@@ -82,7 +100,7 @@ export default {
           liked: false
         },
         {
-          postId: 1,
+          postId: "1",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -91,7 +109,7 @@ export default {
           liked: false
         },
         {
-          postId: 2,
+          postId: "2",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -100,7 +118,7 @@ export default {
           liked: false
         },
         {
-          postId: 3,
+          postId: "3",
           imgUrl:
             "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
           author: "abbylolo",
@@ -109,7 +127,7 @@ export default {
           liked: false
         },
         {
-          postId: 4,
+          postId: "4",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -118,7 +136,7 @@ export default {
           liked: false
         },
         {
-          postId: 5,
+          postId: "5",
           imgUrl:
             "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
           author: "abbylolo",
@@ -127,7 +145,7 @@ export default {
           liked: false
         },
         {
-          postId: 6,
+          postId: "6",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -136,7 +154,7 @@ export default {
           liked: false
         },
         {
-          postId: 7,
+          postId: "7",
           imgUrl:
             "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
           author: "abbylolo",
@@ -145,7 +163,7 @@ export default {
           liked: false
         },
         {
-          postId: 8,
+          postId: "8",
           imgUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           author: "abbylolo",
@@ -154,7 +172,7 @@ export default {
           liked: false
         },
         {
-          postId: 9,
+          postId: "9",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -163,7 +181,7 @@ export default {
           liked: false
         },
         {
-          postId: 10,
+          postId: "10",
           imgUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           author: "abbylolo",
@@ -172,7 +190,7 @@ export default {
           liked: false
         },
         {
-          postId: 11,
+          postId: "11",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -181,7 +199,7 @@ export default {
           liked: false
         },
         {
-          postId: 12,
+          postId: "12",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -190,7 +208,7 @@ export default {
           liked: false
         },
         {
-          postId: 13,
+          postId: "13",
           imgUrl:
             "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
           author: "abbylolo",
@@ -199,7 +217,7 @@ export default {
           liked: false
         },
         {
-          postId: 14,
+          postId: "14",
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -208,6 +226,10 @@ export default {
           liked: false
         }
       ];
+    },
+    // 关闭摄影贴详情
+    postDetailClose(done) {
+      done();
     }
   },
   mounted() {
@@ -296,6 +318,10 @@ main {
   margin: 6px;
 }
 
+.images_show img {
+  cursor: pointer;
+}
+
 .likes,
 .author_info {
   z-index: 8;
@@ -329,5 +355,16 @@ main {
   height: 180px;
   display: inline-block;
   position: relative;
+}
+
+// 摄影圈详情弹出框样式
+/deep/ .el-dialog__header {
+  padding: 20px 20px 10px;
+  text-align: left;
+  border-bottom: 1px solid #bbbbbbab;
+}
+
+/deep/ .el-dialog {
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.3);
 }
 </style>
