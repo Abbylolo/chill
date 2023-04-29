@@ -19,7 +19,7 @@
             @click="
               $router.push({
                 name: 'PhotoCircleDetail',
-                params: { circleInfo: item, state: 'created' }
+                params: { circleInfo: item }
               })
             "
           >
@@ -50,7 +50,7 @@
             @click="
               $router.push({
                 name: 'PhotoCircleDetail',
-                params: { circleInfo: item, state: 'joined' }
+                params: { circleInfo: item }
               })
             "
           >
@@ -63,7 +63,7 @@
     <div class="find_circle_wrap">
       <div class="title_bar">发现摄影圈</div>
       <div class="circle_list">
-        <div v-for="item in allCircleList" :key="item.circleId">
+        <div v-for="item in notJoinedCircleList" :key="item.circleId">
           <img :src="item.avatarUrl" alt="图片加载失败" />
           <div class="circle_info">
             <p
@@ -101,6 +101,8 @@ export default {
       myCircleList: [],
       // 我加入的摄影圈
       joinedCircleList: [],
+      // 我未加入的摄影圈
+      notJoinedCircleList: [],
       // 所有摄影圈列表
       allCircleList: [
         {
@@ -108,59 +110,16 @@ export default {
           avatarUrl: "",
           name: "",
           fansNum: 0,
-          brief: ""
+          brief: "",
+          state: 0 // 0-未加入的的；1-加入的；2-用户创建的
         }
       ]
     };
   },
   methods: {
-    // 获取用户创立的摄影圈
-    getMyCircleList() {
-      // backend 获取用户创立的摄影圈(userId) => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介）
-      this.myCircleList = [
-        {
-          circleId: "1",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "汪星人保护队",
-          fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦"
-        },
-        {
-          circleId: "2",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "喵星人保护队",
-          fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦"
-        }
-      ];
-    },
-    // 获取用户加入的摄影圈
-    getJoinedCircleList() {
-      // backend 获取用户加入的摄影圈(userId) => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介）
-      this.joinedCircleList = [
-        {
-          circleId: "1",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "汪星人保护队",
-          fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦"
-        },
-        {
-          circleId: "2",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "喵星人保护队",
-          fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦"
-        }
-      ];
-    },
-    // 获取已存在的摄影圈列表
+    // 获取所有摄影圈列表
     getAllCircleList() {
-      // backend 获取摄影圈列表() => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介）
+      // backend 获取摄影圈列表getAllCircleList() => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介,状态）
       this.allCircleList = [
         {
           circleId: "1",
@@ -168,7 +127,8 @@ export default {
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           name: "汪星人保护队",
           fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦"
+          brief: "啦啦啦啦啦啦啦啦啦啦",
+          state: 1
         },
         {
           circleId: "2",
@@ -177,7 +137,8 @@ export default {
           name: "喵星人保护队",
           fansNum: 3000,
           brief:
-            "咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦"
+            "咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦",
+          state: 0
         },
         {
           circleId: "3",
@@ -186,9 +147,39 @@ export default {
           name: "喵星人保护队",
           fansNum: 3000,
           brief:
-            "咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦"
+            "咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦",
+          state: 2
+        },
+        {
+          circleId: "4",
+          avatarUrl:
+            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+          name: "汪星人保护队",
+          fansNum: 2000,
+          brief: "啦啦啦啦啦啦啦啦啦啦",
+          state: 0
+        },
+        {
+          circleId: "5",
+          avatarUrl:
+            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+          name: "汪星人保护队",
+          fansNum: 2000,
+          brief: "啦啦啦啦啦啦啦啦啦啦",
+          state: 0
         }
       ];
+
+      // 根据状态对摄影圈进行归类
+      this.allCircleList.forEach(item => {
+        if (item.state == 2) {
+          this.myCircleList.push(item);
+        } else if (item.state == 1) {
+          this.joinedCircleList.push(item);
+        } else {
+          this.notJoinedCircleList.push(item);
+        }
+      });
     },
 
     // 打开创建摄影圈弹窗
@@ -219,12 +210,13 @@ export default {
               instance.confirmButtonText = "执行中...";
               setTimeout(() => {
                 // 提交创建新摄影圈
-                // backend - 创建新摄影圈（...form）=>创建状态
+                // backend - circleCreate创建新摄影圈（userid,...form）=>摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介,状态）
                 this.$message({
                   message: "创立摄影圈成功",
                   type: "success"
                 });
-                done();
+                // 如果创立成功更新摄影圈状态
+                // this.myCircleList.push({res.data});
                 done();
                 instance.confirmButtonLoading = false;
               }, 3000);
@@ -235,28 +227,23 @@ export default {
         }
       }).then(action => {
         this.$refs.createCircle.form = { name: "", brief: "", avatar: "" };
-        this.$message({
-          message: "创立摄影圈成功",
-          type: "success"
-        });
       });
     },
-    // 用户加入摄影圈
+    // 加入摄影圈
     joinCircle(circle) {
-      const circleId = circle.circleId;
-      // backend - 用户加入摄影圈（circleId,userid) => 状态
-      // console.log("circleId", circleId);
-      if (true) {
-        this.$message({
-          message: `成功加入摄影圈${circle.name}`,
-          type: "success"
-        });
+      const statusCode = this.$common.joinCircle(circle);
+      if (statusCode === 200) {
+        // 更新加入状态
+        this.joinedCircleList.push(circle);
+        this.notJoinedCircleList = this.$common.arrRemoveJson(
+          this.notJoinedCircleList,
+          "circleId",
+          circle.circleId
+        );
       }
     }
   },
   mounted() {
-    this.getMyCircleList();
-    this.getJoinedCircleList();
     this.getAllCircleList();
   }
 };

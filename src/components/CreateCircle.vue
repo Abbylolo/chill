@@ -26,6 +26,11 @@
 <script>
 export default {
   name: "CreateCircle",
+  props: {
+    formInit: {
+      type: Object
+    }
+  },
   data() {
     return {
       form: { name: "", brief: "", avatar: "" },
@@ -60,6 +65,9 @@ export default {
       console.log(res, file);
       this.form.avatar = URL.createObjectURL(file.raw);
     }
+  },
+  mounted() {
+    console.log(this.formInit, "ss");
   }
 };
 </script>

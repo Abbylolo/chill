@@ -35,6 +35,9 @@ export default {
         name: routeName
       });
     }
+  },
+  mounted() {
+    console.log("vue", this);
   }
 };
 </script>

@@ -12,12 +12,27 @@
       <el-button
         type="warning"
         plain
-        v-if="state !== 'created' && state !== 'joined'"
+        v-if="circleInfo.state == 2"
+        @click="circleUpdate()"
+        ><i class="el-icon-setting el-icon--left"></i>设置</el-button
+      >
+      <el-button
+        type="warning"
+        plain
+        v-if="circleInfo.state == 1"
+        @click="cancelJoinCircle(circleInfo)"
+        ><i class="el-icon-check el-icon--left"></i>已加入</el-button
+      >
+      <el-button
+        type="warning"
+        plain
+        v-if="circleInfo.state == 0"
+        @click="joinCircle(circleInfo)"
         ><i class="el-icon-plus el-icon--left"></i>加入</el-button
       >
     </header>
     <main>
-      <el-card v-for="item in postList" :key="item.id">
+      <el-card v-for="item in postList" :key="item.postId">
         <div class="card_left">
           <div class="user_info">
             <img
@@ -35,12 +50,12 @@
               <img
                 v-if="item.liked"
                 src="@/assets/images/icons/liked.svg"
-                @click="like(item.id, false)"
+                @click="$common.like(item.postId, false, postList)"
               />
               <img
                 v-else
                 src="@/assets/images/icons/like.svg"
-                @click="like(item.id, true)"
+                @click="$common.like(item.postId, true, postList)"
               />
               <span>{{ item.likes }}</span>
             </span>
@@ -52,7 +67,7 @@
         </div>
         <div class="card_right">
           <el-button
-            @click="move(item.id, 'right')"
+            @click="move(item.postId, 'right')"
             icon="el-icon-arrow-left"
             circle
             class="translate_button"
@@ -70,7 +85,7 @@
             />
           </div>
           <el-button
-            @click="move(item.id, 'left')"
+            @click="move(item.postId, 'left')"
             icon="el-icon-arrow-right"
             circle
             class="translate_button"
@@ -83,8 +98,10 @@
 </template>
 
 <script>
+import CreateCircle from "@/components/CreateCircle.vue";
 export default {
   name: "PhotoCircleDetail",
+  components: { CreateCircle },
   data() {
     return {
       state: "",
@@ -97,7 +114,7 @@ export default {
       },
       postList: [
         {
-          id: "",
+          postId: "",
           userName: "",
           userAvatar: "",
           postBrief: "",
@@ -116,7 +133,7 @@ export default {
       // backend - 获取摄影圈帖子列表（摄影圈id）=》圈内帖子列表（id,用户名，用户头像，帖子简介，点赞数，评论，图片路径）
       this.postList = [
         {
-          id: "0",
+          postId: "0",
           userName: "Abbylolo",
           userAvatar:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -124,7 +141,9 @@ export default {
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
           liked: true,
           likes: 30,
-          comments: ["aaa", "bbb"],
+          comments: [
+            { userName: "xxx", userAvatar: "xxx", content: "xxxx", time: "xxx" }
+          ],
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -137,7 +156,7 @@ export default {
           ]
         },
         {
-          id: "1",
+          postId: "1",
           userName: "Syhn",
           userAvatar:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -151,7 +170,7 @@ export default {
           ]
         },
         {
-          id: "2",
+          postId: "2",
           userName: "Lihua",
           userAvatar:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -176,14 +195,86 @@ export default {
         item.translateX = 0;
       });
     },
-    move(id, direction) {
+    // 设置摄影圈信息
+    circleUpdate() {
+      const h = this.$createElement;
+      const formInit = {
+        name: this.circleInfo.name,
+        brief: this.circleInfo.brief,
+        avatar: this.circleInfo.avatarUrl
+      };
+      this.$msgbox({
+        title: "设置摄影圈",
+        message: h("create-circle", {
+          ref: "createCircle"
+        }),
+        showCancelButton: true,
+        confirmButtonText: "创建",
+        cancelButtonText: "取消",
+        beforeClose: (action, instance, done) => {
+          const form = this.$refs.createCircle.form || {};
+          console.log("form:", form);
+          if (action === "confirm") {
+            if (form.name == "" || form.brief == "") {
+              this.$message({
+                message: "请输入摄影圈名称及简介",
+                type: "warning"
+              });
+              done();
+            } else {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = "执行中...";
+              setTimeout(() => {
+                // 设置摄影圈信息
+                // backend - circleUpdate设置摄影圈（form）=> 摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介,状态）
+                this.$message({
+                  message: "设置摄影圈成功",
+                  type: "success"
+                });
+                // 如果设置成功更新摄影圈信息
+                // this.circleInfo = res.data;
+                done();
+                instance.confirmButtonLoading = false;
+              }, 3000);
+            }
+          } else {
+            done();
+          }
+        }
+      }).then(action => {
+        this.$refs.createCircle.form = { name: "", brief: "", avatar: "" };
+      });
+    },
+    // 加入摄影圈
+    joinCircle(circleInfo) {
+      const statusCode = this.$common.joinCircle(circleInfo);
+      if (statusCode === 200) {
+        // 更新加入状态
+        this.$set(this.circleInfo, "state", 1);
+        // this.circleInfo = { ...this.circleInfo, state: 1 };
+      }
+    },
+    // 取消加入摄影圈
+    cancelJoinCircle(circleInfo) {
+      // backend - 取消加入摄影圈cancelJoinCircle(userid,circleId) => 状态
+      const statusCode = 200;
+      if (statusCode === 200) {
+        // 更新加入状态
+        this.$set(this.circleInfo, "state", 0);
+        this.$message({
+          message: `取消加入摄影圈${circleInfo.name}`,
+          type: "success"
+        });
+      }
+    },
+    move(postId, direction) {
       let flag = -1;
       if (direction == "right") {
         flag = 1;
       }
       let idx = 0;
       this.postList.forEach(item => {
-        if (item.id === id) {
+        if (item.postId === postId) {
           if (item.translateX == 0 && flag == 1) {
             return;
           } else {
@@ -196,22 +287,6 @@ export default {
         }
         idx++;
       });
-    },
-    // 点赞帖子/取消点赞
-    like(postId, flag) {
-      this.postList.forEach(item => {
-        if (item.id === postId) {
-          if (flag) {
-            item.likes++;
-            item.liked = true;
-          } else {
-            item.likes--;
-            item.liked = false;
-          }
-          return;
-        }
-      });
-      // backend 更新帖子点赞状态(postId,1)
     }
   },
   mounted() {

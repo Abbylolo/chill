@@ -6,12 +6,13 @@
         <p style="margin: 0;">{{ userInfo.name }}</p>
         <p style="font-size: 12px;margin: 4px;">{{ userInfo.brief }}</p>
       </div>
-      <el-button type="info" round @click="post()"
+      <el-button type="info" round @click="showMsgPost = true"
         ><i class="el-icon-plus el-icon--left"></i>发布帖子</el-button
       >
+      <MessageBox v-if="showMsgPost">aaa</MessageBox>
     </header>
     <main>
-      <el-card v-for="item in postList" :key="item.id">
+      <el-card v-for="item in postList" :key="item.postId">
         <div class="card_left">
           <div style="font-size: 22px;font-weight: bold; margin: 18px 0;">
             {{ item.createTime }}
@@ -20,17 +21,30 @@
             {{ item.postBrief }}
           </div>
           <div>
+            <span class="likes" style="margin-right:10px; cursor: pointer;">
+              <img
+                v-if="item.liked"
+                src="@/assets/images/icons/liked.svg"
+                @click="$common.like(item.postId, false, postList)"
+              />
+              <img
+                v-else
+                src="@/assets/images/icons/like.svg"
+                @click="$common.like(item.postId, true, postList)"
+              />
+              <span>{{ item.likes }}</span>
+            </span>
             <span style="margin-right:10px; cursor: pointer;">
               <i class="el-icon-edit-outline el-icon--left"></i>编辑
             </span>
-            <span style="cursor: pointer;">
+            <span style="cursor: pointer;" @click="deletePost(item.postId)">
               <i class="el-icon-delete el-icon--left"></i>删除
             </span>
           </div>
         </div>
         <div class="card_right">
           <el-button
-            @click="move(item.id, 'right')"
+            @click="move(item.postId, 'right')"
             icon="el-icon-arrow-left"
             circle
             class="translate_button"
@@ -48,7 +62,7 @@
             />
           </div>
           <el-button
-            @click="move(item.id, 'left')"
+            @click="move(item.postId, 'left')"
             icon="el-icon-arrow-right"
             circle
             class="translate_button"
@@ -61,10 +75,13 @@
 </template>
 
 <script>
+import { MessageBox } from "element-ui";
+
 export default {
   name: "User",
   data() {
     return {
+      showMsgPost: false,
       translateXNum: 200,
       userInfo: {
         avatar: "",
@@ -73,9 +90,10 @@ export default {
       },
       postList: [
         {
-          id: "",
+          postId: "",
           createTime: "",
           postBrief: "",
+          likes: 0,
           imgUrls: [""],
           translateX: 0
         }
@@ -98,10 +116,11 @@ export default {
       // backend 获取用户作品集（userid) => 作品id，创建时间，作品简介,图片地址s
       this.postList = [
         {
-          id: "0",
+          postId: "0",
           createTime: "2023年4月12日",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
+          likes: 22,
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -114,19 +133,21 @@ export default {
           ]
         },
         {
-          id: "1",
+          postId: "1",
           createTime: "2023年4月12日",
           postBrief: "简单介绍介绍介简单介绍绍",
+          likes: 8,
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
           ]
         },
         {
-          id: "2",
+          postId: "2",
           createTime: "2023年4月12日",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
+          likes: 33,
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -143,14 +164,14 @@ export default {
         item.translateX = 0;
       });
     },
-    move(id, direction) {
+    move(postId, direction) {
       let flag = -1;
       if (direction == "right") {
         flag = 1;
       }
       let idx = 0;
       this.postList.forEach(item => {
-        if (item.id === id) {
+        if (item.postId === postId) {
           if (item.translateX == 0 && flag == 1) {
             return;
           } else {
@@ -164,13 +185,39 @@ export default {
         idx++;
       });
     },
-    // 发布帖子
-    post() {}
+    // 删除帖子
+    deletePost(postId) {
+      this.$confirm("此操作将永久删除该帖子, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // backend - 删除帖子（id）=> 删除状态
+          // 如果成功执行下文
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+          this.postList = this.$common.arrRemoveJson(
+            this.postList,
+            "postId",
+            postId
+          );
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    }
   },
   mounted() {
     this.getUserInfo();
     this.getUserWorks();
-  }
+  },
+  components: { MessageBox }
 };
 </script>
 
@@ -274,5 +321,17 @@ header > button {
 .translate_button {
   z-index: 10;
   margin: 10px;
+}
+
+.likes {
+  right: 12px;
+  top: 12px;
+  height: 20px;
+}
+
+.likes img {
+  width: 16px;
+  height: 16px;
+  margin-bottom: -2px;
 }
 </style>

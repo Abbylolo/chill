@@ -6,6 +6,8 @@ import router from "./router";
 import store from "./store";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+// 公共方法
+import common from "./utils/common";
 
 Vue.use(ElementUI);
 
@@ -16,6 +18,7 @@ new Vue({
   el: "#app",
   router,
   store,
+  common,
   components: { App },
   template: "<App/>"
 });
