@@ -16,16 +16,59 @@
       </el-menu-item>
       <el-menu-item index="PhotoCircle">摄影圈</el-menu-item>
       <el-menu-item index="User">个人主页</el-menu-item>
+      <el-menu-item
+        v-if="!isLogin"
+        style="right: 90px;position: absolute;cursor: pointer;"
+        @click="showLogin = true"
+        disabled
+      >
+        登录
+      </el-menu-item>
+      <el-menu-item
+        style="right: 40px;position: absolute;cursor: pointer;"
+        v-if="!isLogin"
+        @click="showRegister = true"
+        disabled
+      >
+        注册
+      </el-menu-item>
+      <el-menu-item
+        v-if="isLogin"
+        style="right: 90px;position: absolute;cursor: pointer;"
+        disabled
+      >
+        {{ userName }}
+      </el-menu-item>
+      <el-menu-item
+        v-if="isLogin"
+        style="right: 40px;position: absolute;cursor: pointer;"
+        disabled
+      >
+        <img style="width: 40px;" src="@/assets/images/icons/avatar.svg" />
+      </el-menu-item>
     </el-menu>
+    <el-dialog title="登录" :visible.sync="showLogin" width="50%">
+      <login></login>
+    </el-dialog>
+    <el-dialog title="注册" :visible.sync="showRegister" width="50%">
+      <register></register>
+    </el-dialog>
     <router-view />
   </div>
 </template>
 
 <script>
+import Login from "@/components/Login.vue";
+import Register from "@/components/Register.vue";
 export default {
   name: "App",
+  components: { Login, Register },
   data() {
     return {
+      showLogin: false,
+      showRegister: false,
+      isLogin: false,
+      userName: "Abbylolo",
       activeIndex: "Homepage"
     };
   },
