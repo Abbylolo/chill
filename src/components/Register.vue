@@ -8,6 +8,9 @@
       label-width="100px"
       class="demo-ruleForm"
     >
+      <el-form-item label="用户名" prop="userName">
+        <el-input v-model.number="ruleForm.userName"></el-input>
+      </el-form-item>
       <el-form-item label="密码" prop="pass">
         <el-input
           type="password"
@@ -21,9 +24,6 @@
           v-model="ruleForm.checkPass"
           autocomplete="off"
         ></el-input>
-      </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input v-model.number="ruleForm.age"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')"
@@ -39,21 +39,18 @@
 export default {
   name: "Register",
   data() {
-    var checkAge = (rule, value, callback) => {
+    var checkUserName = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("年龄不能为空"));
+        return callback(new Error("用户名不能为空"));
       }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
-        } else {
-          if (value < 18) {
-            callback(new Error("必须年满18岁"));
-          } else {
-            callback();
-          }
-        }
-      }, 1000);
+      // setTimeout(() => {
+      //   if (!Number.isInteger(value)) {
+      //     callback(new Error("请输入数字值"));
+      //   } else{
+      //     callback();
+      //   }
+      // }, 1000);
+      callback();
     };
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -78,12 +75,12 @@ export default {
       ruleForm: {
         pass: "",
         checkPass: "",
-        age: ""
+        userName: ""
       },
       rules: {
         pass: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        age: [{ validator: checkAge, trigger: "blur" }]
+        userName: [{ validator: checkUserName, trigger: "blur" }]
       }
     };
   },
@@ -91,9 +88,17 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          // backend - 注册验证（ruleForm)=>结果
+          this.$emit("registerRes");
+          this.$message({
+            message: "注册成功",
+            type: "success"
+          });
         } else {
-          console.log("error submit!!");
+          this.$message({
+            message: "注册失败",
+            type: "error"
+          });
           return false;
         }
       });

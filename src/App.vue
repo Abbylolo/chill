@@ -19,18 +19,16 @@
       <el-menu-item
         v-if="!isLogin"
         style="right: 90px;position: absolute;cursor: pointer;"
-        @click="showLogin = true"
         disabled
       >
-        登录
+        <span @click="showLogin = true">登录</span>
       </el-menu-item>
       <el-menu-item
         style="right: 40px;position: absolute;cursor: pointer;"
         v-if="!isLogin"
-        @click="showRegister = true"
         disabled
       >
-        注册
+        <span @click="showRegister = true">注册</span>
       </el-menu-item>
       <el-menu-item
         v-if="isLogin"
@@ -47,12 +45,26 @@
         <img style="width: 40px;" src="@/assets/images/icons/avatar.svg" />
       </el-menu-item>
     </el-menu>
-    <el-dialog title="登录" :visible.sync="showLogin" width="50%">
-      <login></login>
-    </el-dialog>
-    <el-dialog title="注册" :visible.sync="showRegister" width="50%">
-      <register></register>
-    </el-dialog>
+    <div style="position: absolute;z-index: 100;">
+      <el-dialog
+        title="登录"
+        :visible.sync="showLogin"
+        width="35%"
+        :modal="false"
+        :destroy-on-close="true"
+      >
+        <login @loginRes="showLogin = false"></login>
+      </el-dialog>
+      <el-dialog
+        title="注册"
+        :visible.sync="showRegister"
+        width="35%"
+        :modal="false"
+        :destroy-on-close="true"
+      >
+        <register @registerRes="showRegister = false"></register>
+      </el-dialog>
+    </div>
     <router-view />
   </div>
 </template>
