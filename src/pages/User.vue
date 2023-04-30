@@ -6,10 +6,21 @@
         <p style="margin: 0;">{{ userInfo.name }}</p>
         <p style="font-size: 12px;margin: 4px;">{{ userInfo.brief }}</p>
       </div>
-      <el-button type="info" round @click="showMsgPost = true"
+      <el-button type="info" round @click="showPost = true"
         ><i class="el-icon-plus el-icon--left"></i>发布帖子</el-button
       >
-      <MessageBox v-if="showMsgPost">aaa</MessageBox>
+      <!-- 发布帖子弹窗 -->
+      <el-dialog
+        title="发布摄影贴"
+        :visible.sync="showPost"
+        width="70%"
+        :destroy-on-close="true"
+      >
+        <publish-post ref="publishPost"></publish-post>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="post()">发 布</el-button>
+        </span>
+      </el-dialog>
     </header>
     <main>
       <el-card v-for="item in postList" :key="item.postId">
@@ -34,7 +45,10 @@
               />
               <span>{{ item.likes }}</span>
             </span>
-            <span style="margin-right:10px; cursor: pointer;">
+            <span
+              style="margin-right:10px; cursor: pointer;"
+              @click="edit(item.postId)"
+            >
               <i class="el-icon-edit-outline el-icon--left"></i>编辑
             </span>
             <span style="cursor: pointer;" @click="deletePost(item.postId)">
@@ -71,17 +85,34 @@
       </el-card>
     </main>
     <footer>-THE END-</footer>
+    <!-- 编辑帖子弹窗 -->
+    <el-dialog
+      title="编辑摄影贴"
+      :visible.sync="showEditPost"
+      width="70%"
+      :destroy-on-close="true"
+      @opened="editPostInit(currentPostId)"
+    >
+      <publish-post ref="editPost"></publish-post>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="editPost(currentPostId)"
+          >发 布</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { MessageBox } from "element-ui";
-
+import PublishPost from "../components/PublishPost.vue";
 export default {
   name: "User",
+  components: { PublishPost },
   data() {
     return {
-      showMsgPost: false,
+      showEditPost: false, // 编辑帖子弹窗控制
+      currentPostId: "",
+      showPost: false, // 发布帖子弹窗控制
       translateXNum: 200,
       userInfo: {
         avatar: "",
@@ -211,13 +242,45 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    // 点击发布帖子
+    post() {
+      this.showPost = false;
+      const post = this.$refs.publishPost.post;
+      console.log("post", post);
+      // backend - 个人发布帖子（post，userid）=> 帖子详细信息
+      this.getUserWorks();
+    },
+    // 点击编辑按钮
+    edit(postId) {
+      this.showEditPost = true;
+      this.currentPostId = postId;
+    },
+    // 编辑帖子弹窗信息初始化
+    editPostInit(postId) {
+      // backend - 获取帖子详情（postId）=》帖子详情
+      console.log(this.$refs.editPost.post);
+      this.$refs.editPost.post = {
+        brief: "aaa",
+        cameraInfo: "aaa",
+        parameter: "aa",
+        tags: ["a"],
+        imgUrls: []
+      };
+    },
+    // 编辑帖子
+    editPost(postId) {
+      this.showEditPost = false;
+      const post = this.$refs.editPost.post;
+      console.log("post", post);
+      // backend - 编辑帖子（post，userid，postId）=> 帖子详细信息
+      this.getUserWorks();
     }
   },
   mounted() {
     this.getUserInfo();
     this.getUserWorks();
-  },
-  components: { MessageBox }
+  }
 };
 </script>
 
@@ -333,5 +396,17 @@ header > button {
   width: 16px;
   height: 16px;
   margin-bottom: -2px;
+}
+
+// 发布摄影贴弹出框样式
+/deep/ .el-dialog__header {
+  padding: 20px 20px 10px;
+  text-align: left;
+  border-bottom: 1px solid #bbbbbbab;
+}
+
+/deep/ .el-dialog {
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 }
 </style>

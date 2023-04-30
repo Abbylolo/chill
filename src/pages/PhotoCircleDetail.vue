@@ -20,6 +20,25 @@
         type="warning"
         plain
         v-if="circleInfo.state == 1"
+        @click="showPost = true"
+        ><i class="el-icon-plus el-icon--left"></i>发布帖子</el-button
+      >
+      <!-- 发布帖子弹窗 -->
+      <el-dialog
+        title="发布摄影贴"
+        :visible.sync="showPost"
+        width="70%"
+        :destroy-on-close="true"
+      >
+        <publish-post ref="publishPost"></publish-post>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="post()">发 布</el-button>
+        </span>
+      </el-dialog>
+      <el-button
+        type="warning"
+        plain
+        v-if="circleInfo.state == 1"
         @click="cancelJoinCircle(circleInfo)"
         ><i class="el-icon-check el-icon--left"></i>已加入</el-button
       >
@@ -99,11 +118,13 @@
 
 <script>
 import CreateCircle from "@/components/CreateCircle.vue";
+import PublishPost from "../components/PublishPost.vue";
 export default {
   name: "PhotoCircleDetail",
-  components: { CreateCircle },
+  components: { CreateCircle, PublishPost },
   data() {
     return {
+      showPost: false,
       state: "",
       circleInfo: {
         circleId: "",
@@ -287,6 +308,14 @@ export default {
         }
         idx++;
       });
+    },
+    // 点击发布帖子
+    post() {
+      this.dialogVisible = false;
+      const post = this.$refs.publishPost.post;
+      console.log("post", post);
+      // backend - 摄影圈中发布帖子（post,userId,circleId）=> 帖子详细信息
+      this.getpostList();
     }
   },
   mounted() {
@@ -439,5 +468,17 @@ main {
 .translate_button {
   z-index: 10;
   margin: 10px;
+}
+
+// 发布摄影贴弹出框样式
+/deep/ .el-dialog__header {
+  padding: 20px 20px 10px;
+  text-align: left;
+  border-bottom: 1px solid #bbbbbbab;
+}
+
+/deep/ .el-dialog {
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 }
 </style>
