@@ -66,6 +66,16 @@
           {{ post.author }}
         </div>
       </div>
+      <div class="block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="20"
+          layout="total, prev, pager, next"
+          :total="totalNum"
+        >
+        </el-pagination>
+      </div>
     </main>
   </div>
 </template>
@@ -77,6 +87,8 @@ export default {
   components: { PostDetail },
   data() {
     return {
+      totalNum: 0, //帖子总数
+      currentPage: 1,
       showPostDetail: false,
       searchKeyword: "",
       listKeyword: "全部",
@@ -86,8 +98,8 @@ export default {
   },
   methods: {
     // 搜索图片
-    searchPics(searchKeyword) {
-      // backend 通过图片关键词获取图片组(searchKeyword) => postList
+    searchPics(searchKeyword, pageNum) {
+      // backend 通过图片关键词获取图片组(searchKeyword,pageNum) => postList、帖子总数
       console.log("searchKeyword", searchKeyword);
       this.postList = [
         {
@@ -226,14 +238,20 @@ export default {
           liked: false
         }
       ];
+      this.totalNum = 100;
     },
     // 关闭摄影贴详情
     postDetailClose(done) {
       done();
+    },
+    // 分页请求
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.searchPics(this.searchKeyword || this.listKeyword, val);
     }
   },
   mounted() {
-    this.searchPics(this.keywordList[0]);
+    this.searchPics(this.keywordList[0], 1);
   }
 };
 </script>
