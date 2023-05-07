@@ -195,7 +195,7 @@ export default {
           const form = this.$refs.createCircle.form || {
             name: "",
             brief: "",
-            avatar: ""
+            avatarUrl: ""
           };
           console.log("form:", form);
           if (action === "confirm") {
@@ -226,7 +226,7 @@ export default {
           }
         }
       }).then(action => {
-        this.$refs.createCircle.form = { name: "", brief: "", avatar: "" };
+        this.$refs.createCircle.form = { name: "", brief: "", avatarUrl: "" };
       });
     },
     // 加入摄影圈

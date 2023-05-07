@@ -1,7 +1,7 @@
 <template>
   <div class="bac">
     <header>
-      <img class="avatar" :src="userInfo.avatar" alt="图片加载失败" />
+      <img class="avatar" :src="userInfo.avatarUrl" alt="图片加载失败" />
       <div>
         <p style="margin: 0;">{{ userInfo.name }}</p>
         <p style="font-size: 12px;margin: 4px;">{{ userInfo.brief }}</p>
@@ -115,7 +115,7 @@ export default {
       showPost: false, // 发布帖子弹窗控制
       translateXNum: 200,
       userInfo: {
-        avatar: "",
+        avatarUrl: "",
         name: "",
         brief: ""
       },
@@ -136,7 +136,7 @@ export default {
     getUserInfo() {
       // backend 获取用户信息（userid）=》用户头像、用户名、个人简介
       this.userInfo = {
-        avatar:
+        avatarUrl:
           "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
         name: "Abbylolo",
         brief: "阳光开朗大男孩"
@@ -258,7 +258,7 @@ export default {
     },
     // 编辑帖子弹窗信息初始化
     editPostInit(postId) {
-      // backend - 获取帖子详情（postId）=》帖子详情
+      // backend - 获取摄影贴详情（postId）=》帖子详情
       console.log(this.$refs.editPost.post);
       this.$refs.editPost.post = {
         brief: "aaa",
@@ -273,7 +273,7 @@ export default {
       this.showEditPost = false;
       const post = this.$refs.editPost.post;
       console.log("post", post);
-      // backend - 编辑帖子（post，userid，postId）=> 帖子详细信息
+      // backend - 编辑帖子（post，userid，postId）=> 状态
       this.getUserWorks();
     }
   },

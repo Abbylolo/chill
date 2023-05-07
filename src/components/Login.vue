@@ -11,10 +11,10 @@
       <el-form-item label="用户名" prop="userName">
         <el-input v-model.number="ruleForm.userName"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="pass">
+      <el-form-item label="密码" prop="password">
         <el-input
           type="password"
-          v-model="ruleForm.pass"
+          v-model="ruleForm.password"
           autocomplete="off"
         ></el-input>
       </el-form-item>
@@ -54,11 +54,11 @@ export default {
     };
     return {
       ruleForm: {
-        pass: "",
+        password: "",
         userName: ""
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
+        password: [{ validator: validatePass, trigger: "blur" }],
         userName: [{ validator: checkUserName, trigger: "blur" }]
       }
     };

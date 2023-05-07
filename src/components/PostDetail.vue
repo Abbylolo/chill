@@ -64,7 +64,7 @@ export default {
     return {
       post: {
         author: "",
-        avatar: "",
+        avatarUrl: "",
         time: "",
         brief: "",
         tags: [""],
@@ -80,7 +80,7 @@ export default {
       // backend - 获取摄影贴详情（摄影贴postId）=》摄影贴详情
       this.post = {
         author: "Abbylolo",
-        avatar: "",
+        avatarUrl: "",
         time: "2023年4月10日",
         brief: "啦啦啦啦啦",
         tags: ["阳光", "树木"],

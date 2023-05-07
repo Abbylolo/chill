@@ -54,11 +54,7 @@
       <el-card v-for="item in postList" :key="item.postId">
         <div class="card_left">
           <div class="user_info">
-            <img
-              class="avatar_user"
-              :src="item.userAvatar"
-              alt="图片加载失败"
-            />
+            <img class="avatar_user" :src="item.avatarUrl" alt="图片加载失败" />
             <span> {{ item.userName }}</span>
           </div>
           <div style="font-size: 14px;height: 75px; margin-bottom: 15px;">
@@ -78,10 +74,10 @@
               />
               <span>{{ item.likes }}</span>
             </span>
-            <span style="cursor: pointer;">
+            <!-- <span style="cursor: pointer;">
               <i class="el-icon-chat-dot-square el-icon--left"></i
               >{{ item.comments.length }}
-            </span>
+            </span> -->
           </div>
         </div>
         <div class="card_right">
@@ -137,11 +133,11 @@ export default {
         {
           postId: "",
           userName: "",
-          userAvatar: "",
+          avatarUrl: "",
           postBrief: "",
           translateX: 0,
           likes: 0,
-          comments: [],
+          // comments: [],
           imgUrls: []
         }
       ],
@@ -156,14 +152,14 @@ export default {
         {
           postId: "0",
           userName: "Abbylolo",
-          userAvatar:
+          avatarUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
           liked: true,
           likes: 30,
           comments: [
-            { userName: "xxx", userAvatar: "xxx", content: "xxxx", time: "xxx" }
+            { userName: "xxx", avatarUrl: "xxx", content: "xxxx", time: "xxx" }
           ],
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -179,7 +175,7 @@ export default {
         {
           postId: "1",
           userName: "Syhn",
-          userAvatar:
+          avatarUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief: "简单介绍介绍介简单介绍绍",
           liked: true,
@@ -193,7 +189,7 @@ export default {
         {
           postId: "2",
           userName: "Lihua",
-          userAvatar:
+          avatarUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           postBrief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
@@ -222,7 +218,7 @@ export default {
       const formInit = {
         name: this.circleInfo.name,
         brief: this.circleInfo.brief,
-        avatar: this.circleInfo.avatarUrl
+        avatarUrl: this.circleInfo.avatarUrl
       };
       this.$msgbox({
         title: "设置摄影圈",
@@ -263,7 +259,7 @@ export default {
           }
         }
       }).then(action => {
-        this.$refs.createCircle.form = { name: "", brief: "", avatar: "" };
+        this.$refs.createCircle.form = { name: "", brief: "", avatarUrl: "" };
       });
     },
     // 加入摄影圈
@@ -314,7 +310,7 @@ export default {
       this.dialogVisible = false;
       const post = this.$refs.publishPost.post;
       console.log("post", post);
-      // backend - 摄影圈中发布帖子（post,userId,circleId）=> 帖子详细信息
+      // backend - 摄影圈中发布帖子（post,userId,circleId）=> 状态
       this.getpostList();
     }
   },

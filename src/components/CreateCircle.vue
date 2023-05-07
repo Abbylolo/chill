@@ -15,7 +15,7 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="form.avatar" :src="form.avatar" class="avatar" />
+          <img v-if="form.avatarUrl" :src="form.avatarUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
@@ -33,7 +33,7 @@ export default {
   },
   data() {
     return {
-      form: { name: "", brief: "", avatar: "" },
+      form: { name: "", brief: "", avatarUrl: "" },
       rules: {
         name: [
           { required: true, message: "请输入摄影圈名称", trigger: "blur" },
@@ -63,7 +63,7 @@ export default {
     // 头像上传成功
     handleAvatarSuccess(res, file) {
       console.log(res, file);
-      this.form.avatar = URL.createObjectURL(file.raw);
+      this.form.avatarUrl = URL.createObjectURL(file.raw);
     }
   },
   mounted() {
