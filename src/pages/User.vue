@@ -29,7 +29,7 @@
             {{ item.createTime }}
           </div>
           <div style="font-size: 14px;height: 75px; margin-bottom: 15px;">
-            {{ item.postBrief }}
+            {{ item.brief }}
           </div>
           <div>
             <span class="likes" style="margin-right:10px; cursor: pointer;">
@@ -123,7 +123,7 @@ export default {
         {
           postId: "",
           createTime: "",
-          postBrief: "",
+          brief: "",
           likes: 0,
           imgUrls: [""],
           translateX: 0
@@ -149,7 +149,7 @@ export default {
         {
           postId: "0",
           createTime: "2023年4月12日",
-          postBrief:
+          brief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
           likes: 22,
           imgUrls: [
@@ -166,7 +166,7 @@ export default {
         {
           postId: "1",
           createTime: "2023年4月12日",
-          postBrief: "简单介绍介绍介简单介绍绍",
+          brief: "简单介绍介绍介简单介绍绍",
           likes: 8,
           imgUrls: [
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
@@ -176,7 +176,7 @@ export default {
         {
           postId: "2",
           createTime: "2023年4月12日",
-          postBrief:
+          brief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
           likes: 33,
           imgUrls: [

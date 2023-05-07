@@ -58,7 +58,7 @@
             <span> {{ item.userName }}</span>
           </div>
           <div style="font-size: 14px;height: 75px; margin-bottom: 15px;">
-            {{ item.postBrief }}
+            {{ item.brief }}
           </div>
           <div>
             <span class="likes" style="margin-right:10px; cursor: pointer;">
@@ -134,7 +134,7 @@ export default {
           postId: "",
           userName: "",
           avatarUrl: "",
-          postBrief: "",
+          brief: "",
           translateX: 0,
           likes: 0,
           // comments: [],
@@ -154,7 +154,7 @@ export default {
           userName: "Abbylolo",
           avatarUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          postBrief:
+          brief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
           liked: true,
           likes: 30,
@@ -177,7 +177,7 @@ export default {
           userName: "Syhn",
           avatarUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          postBrief: "简单介绍介绍介简单介绍绍",
+          brief: "简单介绍介绍介简单介绍绍",
           liked: true,
           likes: 30,
           comments: ["aaa", "bbb"],
@@ -191,7 +191,7 @@ export default {
           userName: "Lihua",
           avatarUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          postBrief:
+          brief:
             "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
           liked: false,
           likes: 30,
