@@ -3,7 +3,7 @@
     <header>
       <img class="avatar" :src="userInfo.avatarUrl" alt="图片加载失败" />
       <div>
-        <p style="margin: 0;">{{ userInfo.name }}</p>
+        <p style="margin: 0;">{{ userInfo.userName }}</p>
         <p style="font-size: 12px;margin: 4px;">{{ userInfo.brief }}</p>
       </div>
       <el-button type="info" round @click="showPost = true"
@@ -116,7 +116,7 @@ export default {
       translateXNum: 200,
       userInfo: {
         avatarUrl: "",
-        name: "",
+        userName: "",
         brief: ""
       },
       postList: [
@@ -138,7 +138,7 @@ export default {
       this.userInfo = {
         avatarUrl:
           "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-        name: "Abbylolo",
+        userName: "Abbylolo",
         brief: "阳光开朗大男孩"
       };
     },
