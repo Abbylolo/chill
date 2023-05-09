@@ -68,6 +68,14 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // backend - 登录验证（ruleForm)=>结果
+          this.$api
+            .login({
+              username: this.ruleForm.userName,
+              password: this.ruleForm.password
+            })
+            .then(res => {
+              console.log(res);
+            });
           this.$emit("loginRes");
           this.$message({
             message: "登录成功",

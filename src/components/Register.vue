@@ -89,6 +89,14 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // backend - 注册验证（ruleForm)=>结果
+          this.$api
+            .register({
+              username: this.ruleForm.userName,
+              password: this.ruleForm.password
+            })
+            .then(res => {
+              console.log(res);
+            });
           this.$emit("registerRes");
           this.$message({
             message: "注册成功",
