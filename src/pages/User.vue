@@ -135,12 +135,11 @@ export default {
     // 获取用户信息
     getUserInfo() {
       // backend 获取用户信息（userid）=》用户头像、用户名、个人简介
-      this.userInfo = {
-        avatarUrl:
-          "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-        userName: "Abbylolo",
-        brief: "阳光开朗大男孩"
-      };
+      this.userInfo = this.$store.state.user;
+      if (!this.userInfo.avatarUrl) {
+        this.userInfo.avatarUrl =
+          "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
+      }
     },
     // 获取用户作品集
     getUserWorks() {

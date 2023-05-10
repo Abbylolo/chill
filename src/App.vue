@@ -15,7 +15,8 @@
         社区
       </el-menu-item>
       <el-menu-item index="PhotoCircle">摄影圈</el-menu-item>
-      <el-menu-item index="User">个人主页</el-menu-item>
+      <el-menu-item index="User" v-if="isLogin">个人主页</el-menu-item>
+      <!-- 未登录显示 -->
       <el-menu-item
         v-if="!isLogin"
         style="right: 90px;position: absolute;cursor: pointer;"
@@ -30,21 +31,37 @@
       >
         <span @click="showRegister = true">注册</span>
       </el-menu-item>
+      <!-- 已登录显示 -->
       <el-menu-item
         v-if="isLogin"
-        style="right: 90px;position: absolute;cursor: pointer;"
+        style="right: 120px;position: absolute;cursor: pointer;"
         disabled
       >
         {{ userName }}
       </el-menu-item>
       <el-menu-item
         v-if="isLogin"
-        style="right: 40px;position: absolute;cursor: pointer;"
+        style="right: 70px;position: absolute;cursor: pointer;"
         disabled
       >
-        <img style="width: 40px;" src="@/assets/images/icons/avatar.svg" />
+        <img
+          style="width: 40px;height: 40px;border-radius:100px;"
+          :src="avatarUrl"
+        />
+      </el-menu-item>
+      <el-menu-item
+        v-if="isLogin"
+        style="right: 30px;position: absolute;cursor: pointer;"
+        disabled
+      >
+        <img
+          src="@/assets/images/icons/exit.svg"
+          style="height: 25px;"
+          @click="exit()"
+        />
       </el-menu-item>
     </el-menu>
+    <!-- 登录注册弹窗 -->
     <div style="position: absolute;z-index: 100;">
       <el-dialog
         title="登录"
@@ -53,7 +70,7 @@
         :modal="false"
         :destroy-on-close="true"
       >
-        <login @loginRes="showLogin = false"></login>
+        <login @loginRes="loginRes"></login>
       </el-dialog>
       <el-dialog
         title="注册"
@@ -62,7 +79,7 @@
         :modal="false"
         :destroy-on-close="true"
       >
-        <register @registerRes="showRegister = false"></register>
+        <register @registerRes="registerRes"></register>
       </el-dialog>
     </div>
     <router-view />
@@ -81,19 +98,52 @@ export default {
       showRegister: false,
       isLogin: false,
       userName: "Abbylolo",
-      activeIndex: "Homepage"
+      activeIndex: "Homepage",
+      avatarUrl:
+        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
     };
   },
   methods: {
+    // 退出登录
+    exit() {
+      this.$confirm("确认退出登录吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$message({
+          type: "info",
+          message: "退出登录"
+        });
+        this.isLogin = false;
+        this.$store.commit("LOGIN", {});
+        window.sessionStorage.setItem("username", {});
+        window.sessionStorage.setItem("userId", {});
+      });
+    },
+    loginRes(userInfo) {
+      this.showLogin = false;
+      if (userInfo) {
+        this.isLogin = true;
+        this.userName = userInfo.userName;
+        this.avatarUrl = userInfo.avatarUrl;
+      }
+    },
+    registerRes(userInfo) {
+      this.showRegister = false;
+      if (userInfo) {
+        this.isLogin = true;
+        this.userName = userInfo.userName;
+        this.avatarUrl = userInfo.avatarUrl;
+      }
+    },
     handleSelect(routeName) {
       this.$router.push({
         name: routeName
       });
     }
   },
-  mounted() {
-    console.log("vue", this);
-  }
+  mounted() {}
 };
 </script>
 
@@ -118,5 +168,9 @@ export default {
 /deep/ .el-menu-item.is-disabled {
   opacity: 1;
   cursor: default;
+}
+
+/deep/.el-dialog {
+  border-radius: 10px;
 }
 </style>

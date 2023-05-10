@@ -73,14 +73,26 @@ export default {
               username: this.ruleForm.userName,
               password: this.ruleForm.password
             })
-            .then(res => {
-              console.log(res);
+            .then(({ data }) => {
+              if (data.status == "200") {
+                this.$message({
+                  message: data.msg,
+                  type: "success"
+                });
+                // store存储用户数据
+                this.$store.commit("LOGIN", data.data);
+                // sessionStorage存储用户数据
+                window.sessionStorage.setItem("username", data.data.userName);
+                window.sessionStorage.setItem("userId", data.data.userId);
+                this.$emit("loginRes", data.data);
+              } else {
+                this.$message({
+                  message: data.msg,
+                  type: "error"
+                });
+                this.$emit("loginRes");
+              }
             });
-          this.$emit("loginRes");
-          this.$message({
-            message: "登录成功",
-            type: "success"
-          });
         } else {
           this.$message({
             message: "登录失败",

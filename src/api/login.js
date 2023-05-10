@@ -6,7 +6,7 @@ const login = {
       headers: {
         "Content-Type": "application/json"
       },
-      url: "/sys/login",
+      url: "/api/user/login",
       method: "post",
       data
     });
@@ -16,7 +16,7 @@ const login = {
       headers: {
         "Content-Type": "application/json"
       },
-      url: "/sys/register",
+      url: "/api/user/register",
       method: "post",
       data
     });
