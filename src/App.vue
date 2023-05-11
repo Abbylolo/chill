@@ -119,6 +119,8 @@ export default {
         this.$store.commit("LOGIN", {});
         window.sessionStorage.setItem("username", {});
         window.sessionStorage.setItem("userId", {});
+        window.sessionStorage.setItem("brief", {});
+        window.sessionStorage.setItem("userId", {});
         // 退出登录路由跳转到社区首页
         this.$router.push({ name: "Homepage" });
       });
@@ -149,7 +151,11 @@ export default {
       });
     }
   },
-  mounted() {}
+  mounted() {
+    this.isLogin = window.sessionStorage.getItem("userId");
+    this.userName = window.sessionStorage.getItem("username");
+    this.avatarUrl = window.sessionStorage.getItem("avatarUrl");
+  }
 };
 </script>
 

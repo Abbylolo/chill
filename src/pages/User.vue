@@ -141,10 +141,10 @@ export default {
     getUserInfo() {
       // this.userInfo = this.$store.state.user;
       this.userInfo = {
-        avatarUrl: window.sessionStorage.setItem("avatarUrl"),
-        userName: window.sessionStorage.setItem("userName"),
-        brief: window.sessionStorage.setItem("brief"),
-        userId: window.sessionStorage.setItem("userId")
+        avatarUrl: window.sessionStorage.getItem("avatarUrl"),
+        userName: window.sessionStorage.getItem("username"),
+        brief: window.sessionStorage.getItem("brief"),
+        userId: window.sessionStorage.getItem("userId")
       };
       if (!this.userInfo.avatarUrl) {
         this.userInfo.avatarUrl =
