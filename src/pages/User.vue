@@ -144,7 +144,7 @@ export default {
         avatarUrl: window.sessionStorage.getItem("avatarUrl"),
         userName: window.sessionStorage.getItem("username"),
         brief: window.sessionStorage.getItem("brief"),
-        userId: window.sessionStorage.getItem("userId")
+        userId: Number(window.sessionStorage.getItem("userId"))
       };
       if (!this.userInfo.avatarUrl) {
         this.userInfo.avatarUrl =

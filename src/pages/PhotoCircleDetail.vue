@@ -317,7 +317,7 @@ export default {
   },
   mounted() {
     // this.userId = this.$store.state.userId;
-    this.userId = window.sessionStorage.getItem("userId");
+    this.userId = Number(window.sessionStorage.getItem("userId"));
     this.circleInfo = this.$route.params.circleInfo || {
       circleId: "",
       avatarUrl: "",

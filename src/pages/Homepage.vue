@@ -254,7 +254,7 @@ export default {
     }
   },
   mounted() {
-    this.userId = window.sessionStorage.getItem("userId");
+    this.userId = Number(window.sessionStorage.getItem("userId"));
     this.searchPics(this.keywordList[0], 1);
   }
 };
