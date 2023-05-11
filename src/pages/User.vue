@@ -26,7 +26,7 @@
       <el-card v-for="item in postList" :key="item.postId">
         <div class="card_left">
           <div style="font-size: 22px;font-weight: bold; margin: 18px 0;">
-            {{ item.createTime }}
+            {{ item.createTime.split("日")[0] + "日" }}
           </div>
           <div style="font-size: 14px;height: 75px; margin-bottom: 15px;">
             {{ item.brief }}
@@ -36,14 +36,18 @@
               <img
                 v-if="item.liked"
                 src="@/assets/images/icons/liked.svg"
-                @click="$common.like(item.postId, false, postList)"
+                @click="
+                  $common.like(item.postId, false, postList, userInfo.userId)
+                "
               />
               <img
                 v-else
                 src="@/assets/images/icons/like.svg"
-                @click="$common.like(item.postId, true, postList)"
+                @click="
+                  $common.like(item.postId, true, postList, userInfo.userId)
+                "
               />
-              <span>{{ item.likes }}</span>
+              <span>{{ item.liker == null ? 0 : item.liker.length }}</span>
             </span>
             <span
               style="margin-right:10px; cursor: pointer;"
@@ -117,14 +121,15 @@ export default {
       userInfo: {
         avatarUrl: "",
         userName: "",
-        brief: ""
+        brief: "",
+        userId: 0
       },
       postList: [
         {
           postId: "",
           createTime: "",
           brief: "",
-          likes: 0,
+          liker: "",
           imgUrls: [""],
           translateX: 0
         }
@@ -134,65 +139,127 @@ export default {
   methods: {
     // 获取用户信息
     getUserInfo() {
-      // backend 获取用户信息（userid）=》用户头像、用户名、个人简介
-      this.userInfo = this.$store.state.user;
+      // this.userInfo = this.$store.state.user;
+      this.userInfo = {
+        avatarUrl: window.sessionStorage.setItem("avatarUrl"),
+        userName: window.sessionStorage.setItem("userName"),
+        brief: window.sessionStorage.setItem("brief"),
+        userId: window.sessionStorage.setItem("userId")
+      };
       if (!this.userInfo.avatarUrl) {
         this.userInfo.avatarUrl =
           "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
       }
     },
+    // 点击发布帖子
+    post() {
+      this.showPost = false;
+      const post = this.$refs.publishPost.post;
+      console.log("post", post);
+      // backend - 个人发布帖子（post，userid）=> 帖子详细信息
+      const params = { ...post, userId: this.userInfo.userId };
+      this.$api.addPost(params).then(res => {
+        if (res.data.code == 200) {
+          this.$message({
+            message: res.data.msg,
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.data.msg,
+            type: "error"
+          });
+        }
+      });
+      this.getUserWorks();
+    },
     // 获取用户作品集
     getUserWorks() {
       // backend 获取用户作品集（userid) => 作品id，创建时间，作品简介,图片地址s
-      this.postList = [
-        {
-          postId: "0",
-          createTime: "2023年4月12日",
-          brief:
-            "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
-          likes: 22,
-          imgUrls: [
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-          ]
-        },
-        {
-          postId: "1",
-          createTime: "2023年4月12日",
-          brief: "简单介绍介绍介简单介绍绍",
-          likes: 8,
-          imgUrls: [
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-          ]
-        },
-        {
-          postId: "2",
-          createTime: "2023年4月12日",
-          brief:
-            "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
-          likes: 33,
-          imgUrls: [
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-          ]
+      this.$api.getUserPostList({ userId: this.userInfo.userId }).then(res => {
+        if (res.data.code == 200) {
+          this.postList = res.data.data;
+          this.postList.forEach(item => {
+            item.translateX = 0;
+          });
+        } else {
+          this.$message({
+            message: "查询用户作品集失败",
+            type: "error"
+          });
         }
-      ];
-      this.postList.forEach(item => {
-        item.translateX = 0;
       });
+    },
+    // 删除帖子
+    deletePost(postId) {
+      this.$confirm("此操作将永久删除该帖子, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // backend - 删除帖子（id）=> 删除状态
+          this.$api.deletePost({ postId: postId }).then(res => {
+            if (res.data.code == 200) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.postList = this.$common.arrRemoveJson(
+                this.postList,
+                "postId",
+                postId
+              );
+            } else {
+              this.$message({
+                type: "error",
+                message: "删除失败"
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+
+    // 点击编辑按钮
+    edit(postId) {
+      this.showEditPost = true;
+      this.currentPostId = postId;
+    },
+    // 编辑帖子弹窗信息初始化
+    editPostInit(postId) {
+      // backend - 获取摄影贴详情（postId）=》帖子详情
+      this.$api.getPostDetail({ postId }).then(res => {
+        if (res.data.code == 200) {
+          const postDetail = res.data.data;
+          postDetail.imgUrlList = [];
+          postDetail.imgUrls.forEach(item => {
+            postDetail.imgUrlList.push({ url: item });
+          });
+          this.$refs.editPost.post = postDetail;
+        }
+      });
+    },
+    // 编辑帖子
+    editPost(postId) {
+      this.showEditPost = false;
+      const post = this.$refs.editPost.post;
+      console.log("post", post);
+      // backend - 编辑帖子（post，postId）=> 状态
+      this.$api.editPost({ postId, ...post }).then(res => {
+        if (res.data.code == 200) {
+          this.$message({
+            type: "success",
+            message: res.data.msg
+          });
+        }
+      });
+      this.getUserWorks();
     },
     move(postId, direction) {
       let flag = -1;
@@ -214,66 +281,6 @@ export default {
         }
         idx++;
       });
-    },
-    // 删除帖子
-    deletePost(postId) {
-      this.$confirm("此操作将永久删除该帖子, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          // backend - 删除帖子（id）=> 删除状态
-          // 如果成功执行下文
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-          this.postList = this.$common.arrRemoveJson(
-            this.postList,
-            "postId",
-            postId
-          );
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    // 点击发布帖子
-    post() {
-      this.showPost = false;
-      const post = this.$refs.publishPost.post;
-      console.log("post", post);
-      // backend - 个人发布帖子（post，userid）=> 帖子详细信息
-      this.getUserWorks();
-    },
-    // 点击编辑按钮
-    edit(postId) {
-      this.showEditPost = true;
-      this.currentPostId = postId;
-    },
-    // 编辑帖子弹窗信息初始化
-    editPostInit(postId) {
-      // backend - 获取摄影贴详情（postId）=》帖子详情
-      console.log(this.$refs.editPost.post);
-      this.$refs.editPost.post = {
-        brief: "aaa",
-        cameraInfo: "aaa",
-        parameter: "aa",
-        tags: ["a"],
-        imgUrls: []
-      };
-    },
-    // 编辑帖子
-    editPost(postId) {
-      this.showEditPost = false;
-      const post = this.$refs.editPost.post;
-      console.log("post", post);
-      // backend - 编辑帖子（post，userid，postId）=> 状态
-      this.getUserWorks();
     }
   },
   mounted() {

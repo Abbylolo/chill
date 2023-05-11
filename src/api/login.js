@@ -1,6 +1,8 @@
 import request from "./request";
-// 登录模块接口
+
+/* 登录注册模块接口 */
 const login = {
+  // 登录
   login(data) {
     return request({
       headers: {
@@ -11,6 +13,7 @@ const login = {
       data
     });
   },
+  // 注册
   register(data) {
     return request({
       headers: {

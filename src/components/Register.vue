@@ -136,7 +136,7 @@ export default {
               avatarUrl: this.ruleForm.avatarUrl
             })
             .then(({ data }) => {
-              if (data.status == "200") {
+              if (data.code == "200") {
                 console.log(data.data, "data.data");
                 this.$message({
                   message: data.msg,
@@ -147,6 +147,8 @@ export default {
                 // sessionStorage存储用户数据
                 window.sessionStorage.setItem("username", data.data.userName);
                 window.sessionStorage.setItem("userId", data.data.userId);
+                window.sessionStorage.setItem("avatarUrl", data.data.avatarUrl);
+                window.sessionStorage.setItem("brief", data.data.brief);
                 this.$emit("registerRes", data.data);
               } else {
                 this.$message({
@@ -184,7 +186,8 @@ export default {
     },
     // 上传头像图片成功
     handleAvatarSuccess(res, file) {
-      if (res.status == "200") {
+      console.log(res, "sss");
+      if (res.code == "200") {
         this.$set(this.ruleForm, "avatarUrl", res.data);
       } else {
         this.$message({

@@ -65,12 +65,12 @@
               <img
                 v-if="item.liked"
                 src="@/assets/images/icons/liked.svg"
-                @click="$common.like(item.postId, false, postList)"
+                @click="$common.like(item.postId, false, postList, userId)"
               />
               <img
                 v-else
                 src="@/assets/images/icons/like.svg"
-                @click="$common.like(item.postId, true, postList)"
+                @click="$common.like(item.postId, true, postList, userId)"
               />
               <span>{{ item.likes }}</span>
             </span>
@@ -120,6 +120,7 @@ export default {
   components: { CreateCircle, PublishPost },
   data() {
     return {
+      userId: 0,
       showPost: false,
       state: "",
       circleInfo: {
@@ -315,6 +316,8 @@ export default {
     }
   },
   mounted() {
+    // this.userId = this.$store.state.userId;
+    this.userId = window.sessionStorage.setItem("userId");
     this.circleInfo = this.$route.params.circleInfo || {
       circleId: "",
       avatarUrl: "",

@@ -119,6 +119,8 @@ export default {
         this.$store.commit("LOGIN", {});
         window.sessionStorage.setItem("username", {});
         window.sessionStorage.setItem("userId", {});
+        // 退出登录路由跳转到社区首页
+        this.$router.push({ name: "Homepage" });
       });
     },
     loginRes(userInfo) {
@@ -126,7 +128,9 @@ export default {
       if (userInfo) {
         this.isLogin = true;
         this.userName = userInfo.userName;
-        this.avatarUrl = userInfo.avatarUrl;
+        this.avatarUrl =
+          userInfo.avatarUrl ||
+          "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
       }
     },
     registerRes(userInfo) {
@@ -134,7 +138,9 @@ export default {
       if (userInfo) {
         this.isLogin = true;
         this.userName = userInfo.userName;
-        this.avatarUrl = userInfo.avatarUrl;
+        this.avatarUrl =
+          userInfo.avatarUrl ||
+          "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
       }
     },
     handleSelect(routeName) {

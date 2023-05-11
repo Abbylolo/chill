@@ -74,7 +74,7 @@ export default {
               password: this.ruleForm.password
             })
             .then(({ data }) => {
-              if (data.status == "200") {
+              if (data.code == "200") {
                 this.$message({
                   message: data.msg,
                   type: "success"
@@ -84,6 +84,8 @@ export default {
                 // sessionStorage存储用户数据
                 window.sessionStorage.setItem("username", data.data.userName);
                 window.sessionStorage.setItem("userId", data.data.userId);
+                window.sessionStorage.setItem("avatarUrl", data.data.avatarUrl);
+                window.sessionStorage.setItem("brief", data.data.brief);
                 this.$emit("loginRes", data.data);
               } else {
                 this.$message({

@@ -52,12 +52,12 @@
           <img
             v-if="post.liked"
             src="@/assets/images/icons/liked.svg"
-            @click="$common.like(post.postId, false, postList)"
+            @click="$common.like(post.postId, false, postList, userId)"
           />
           <img
             v-else
             src="@/assets/images/icons/like.svg"
-            @click="$common.like(post.postId, true, postList)"
+            @click="$common.like(post.postId, true, postList, userId)"
           />
           <span>{{ post.likes }}</span>
         </div>
@@ -87,6 +87,7 @@ export default {
   components: { PostDetail },
   data() {
     return {
+      userId: 0,
       totalNum: 0, //帖子总数
       currentPage: 1,
       showPostDetail: false,
@@ -253,6 +254,7 @@ export default {
     }
   },
   mounted() {
+    this.userId = window.sessionStorage.getItem("userId");
     this.searchPics(this.keywordList[0], 1);
   }
 };

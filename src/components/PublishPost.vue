@@ -15,8 +15,8 @@
       <p>作品标签</p>
       <div style="display: flex;">
         <el-tag
-          :key="tag"
-          v-for="tag in post.tags"
+          :key="index"
+          v-for="(tag, index) in post.tags"
           closable
           :disable-transitions="false"
           @close="handleClose(tag)"
@@ -56,10 +56,13 @@
     </div>
     <div class="right">
       <el-upload
-        action="https://jsonplaceholder.typicode.com/posts/"
+        action="/api/common/uploadPic"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
+        :on-success="handlePictureSuccess"
+        :before-upload="beforePictureUpload"
+        :file-list="post.imgUrlList"
         :limit="9"
       >
         <i class="el-icon-plus"></i>
@@ -83,20 +86,56 @@ export default {
         cameraInfo: "",
         parameter: "",
         tags: [],
-        imgUrls: []
+        imgUrls: [],
+        imgUrlList: []
       },
       inputVisible: false,
       inputValue: ""
     };
   },
   methods: {
+    /* 图片操作 */
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      const imgUrls = [];
+      console.log(fileList, "fileList");
+      fileList.forEach(item => {
+        imgUrls.push(item.url);
+      });
+      this.$set(this.post, "imgUrls", imgUrls);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    // 图片预检
+    beforePictureUpload(file) {
+      const isJPG = file.type === "image/jpeg" || "image/jpeg";
+      const isLt7M = file.size / 1024 / 1024 < 7;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt7M) {
+        this.$message.error("上传头像图片大小不能超过 7MB!");
+      }
+      return isJPG && isLt7M;
+    },
+    // 上传图片组成功
+    handlePictureSuccess(res, file) {
+      const fileName = res.data;
+      if (res.code == "200") {
+        let imgUrls = this.post.imgUrls;
+        imgUrls.push(fileName);
+        this.$set(this.post, "imgUrls", imgUrls);
+      } else {
+        this.$message({
+          message: "上传失败",
+          type: "error"
+        });
+      }
+      this.dialogVisible = false;
+    },
+    /* 标签操作 */
     handleClose(tag) {
       this.post.tags.splice(this.post.tags.indexOf(tag), 1);
     },
