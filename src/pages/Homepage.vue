@@ -5,7 +5,7 @@
       <div class="white-mask"></div>
       <el-input
         placeholder="搜索图片"
-        v-model="searchKeyword"
+        v-model="keyword"
         class="search"
         maxlength="20"
         @change="searchPics"
@@ -31,7 +31,7 @@
     </header>
     <!-- 主页面 -->
     <main>
-      <div class="images_show" v-for="post in postList" :key="post.postId">
+      <div class="images_show" v-for="(post, index) in postList" :key="index">
         <img
           :src="post.imgUrl"
           class="image__lazy"
@@ -62,7 +62,10 @@
           <span>{{ post.likes }}</span>
         </div>
         <div class="author_info">
-          <img src="@/assets/images/icons/avatar.svg" />
+          <!-- <img src="@/assets/images/icons/avatar.svg" /> -->
+          <img
+            src="https://chill-pic.oss-cn-hangzhou.aliyuncs.com/bca24ceb1b5a13a48c5e97861dadf562.jpg"
+          />
           {{ post.author }}
         </div>
       </div>
@@ -91,7 +94,7 @@ export default {
       totalNum: 0, //帖子总数
       currentPage: 1,
       showPostDetail: false,
-      searchKeyword: "",
+      keyword: "",
       listKeyword: "全部",
       keywordList: ["全部", "自然", "人物", "景观", "花卉"],
       postList: [
@@ -101,12 +104,103 @@ export default {
   },
   methods: {
     // 搜索图片
-    searchPics(searchKeyword, pageNum) {
-      // backend 通过图片关键词获取图片组(searchKeyword,pageNum) => postList、帖子总数
-      console.log("searchKeyword", searchKeyword);
+    searchPics(keyword, pageNum) {
+      // backend 通过图片关键词获取图片组(keyword,pageNum) => postList、帖子总数
+      console.log("keyword", keyword);
       this.postList = [
         {
-          postId: "0",
+          postId: 0,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/451cd77fb0f313a0bd3052f7310c158a.JPEG",
+          author: "abbylolo",
+          avatarUrl: "~@/assets/images/icons/avatar.svg",
+          likes: 99,
+          liked: false
+        },
+        {
+          postId: 0,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/757c3077899de13dfbcb6180af1c5e42.JPEG",
+          author: "abbylolo",
+          avatarUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/bca24ceb1b5a13a48c5e97861dadf562.jpg",
+          likes: 88,
+          liked: false
+        },
+        {
+          postId: 2,
+          imgUrl:
+            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+          author: "我是于谦吃不饱",
+          avatarUrl: "",
+          likes: 77,
+          liked: false
+        },
+        {
+          postId: 3,
+          imgUrl:
+            "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
+          author: "abbylolo",
+          avatarUrl: "",
+          likes: 77,
+          liked: false
+        },
+        {
+          postId: 4,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/cadba27c834659e42828b4bbbe0da5b1.JPEG",
+          author: "abbylolo",
+          avatarUrl: "",
+          likes: 77,
+          liked: false
+        },
+        {
+          postId: 5,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/7803d471eb0b6ef8350451bb0a87a040.JPEG",
+          author: "abbylolo",
+          avatarUrl: "",
+          likes: 77,
+          liked: false
+        },
+        {
+          postId: 6,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/26230c13a1d43ef0147c8c149bd8521a.JPEG",
+          author: "abbylolo",
+          avatarUrl: "",
+          likes: 77,
+          liked: false
+        },
+        {
+          postId: 7,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/00d2d49e29677e30d0e08399893f9625.JPEG",
+          author: "abbylolo",
+          avatarUrl: "",
+          likes: 77,
+          liked: false
+        },
+        {
+          postId: 8,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/1fe5025dc0996e2e4008b99dd754f880.jpg",
+          author: "abbylolo",
+          avatarUrl: "~@/assets/images/icons/avatar.svg",
+          likes: 99,
+          liked: false
+        },
+        {
+          postId: 9,
+          imgUrl:
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/2b418cab17a75a58798009614717fc09.jpg",
+          author: "abbylolo",
+          avatarUrl: "@/assets/images/icons/avatar.svg",
+          likes: 88,
+          liked: false
+        },
+        {
+          postId: 10,
           imgUrl:
             "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
           author: "abbylolo",
@@ -115,7 +209,7 @@ export default {
           liked: false
         },
         {
-          postId: "1",
+          postId: 11,
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -124,16 +218,16 @@ export default {
           liked: false
         },
         {
-          postId: "2",
+          postId: 12,
           imgUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/ceda214481455330c17f00752fffde82.jpg",
           author: "abbylolo",
           avatarUrl: "",
           likes: 77,
           liked: false
         },
         {
-          postId: "3",
+          postId: 13,
           imgUrl:
             "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
           author: "abbylolo",
@@ -142,7 +236,7 @@ export default {
           liked: false
         },
         {
-          postId: "4",
+          postId: 14,
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -151,16 +245,16 @@ export default {
           liked: false
         },
         {
-          postId: "5",
+          postId: 15,
           imgUrl:
-            "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/2fa4bb7704758ed22238b70cfe6b973a.JPEG",
           author: "abbylolo",
           avatarUrl: "",
           likes: 77,
           liked: false
         },
         {
-          postId: "6",
+          postId: 16,
           imgUrl:
             "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           author: "abbylolo",
@@ -169,72 +263,9 @@ export default {
           liked: false
         },
         {
-          postId: "7",
+          postId: 17,
           imgUrl:
-            "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
-          author: "abbylolo",
-          avatarUrl: "",
-          likes: 77,
-          liked: false
-        },
-        {
-          postId: "8",
-          imgUrl:
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          author: "abbylolo",
-          avatarUrl: "~@/assets/images/icons/avatar.svg",
-          likes: 99,
-          liked: false
-        },
-        {
-          postId: "9",
-          imgUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          author: "abbylolo",
-          avatarUrl: "@/assets/images/icons/avatar.svg",
-          likes: 88,
-          liked: false
-        },
-        {
-          postId: "10",
-          imgUrl:
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          author: "abbylolo",
-          avatarUrl: "~@/assets/images/icons/avatar.svg",
-          likes: 99,
-          liked: false
-        },
-        {
-          postId: "11",
-          imgUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          author: "abbylolo",
-          avatarUrl: "@/assets/images/icons/avatar.svg",
-          likes: 88,
-          liked: false
-        },
-        {
-          postId: "12",
-          imgUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          author: "abbylolo",
-          avatarUrl: "",
-          likes: 77,
-          liked: false
-        },
-        {
-          postId: "13",
-          imgUrl:
-            "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
-          author: "abbylolo",
-          avatarUrl: "",
-          likes: 77,
-          liked: false
-        },
-        {
-          postId: "14",
-          imgUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+            "https://chill-pic.oss-cn-hangzhou.aliyuncs.com/ceda214481455330c17f00752fffde82.jpg",
           author: "abbylolo",
           avatarUrl: "",
           likes: 77,
@@ -250,7 +281,7 @@ export default {
     // 分页请求
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      this.searchPics(this.searchKeyword || this.listKeyword, val);
+      this.searchPics(this.keyword || this.listKeyword, val);
     }
   },
   mounted() {

@@ -1,10 +1,12 @@
 import Vue from "vue";
 import login from "./login";
 import post from "./post";
+import circle from "./circle";
 
 const api = {
   ...login,
-  ...post
+  ...post,
+  ...circle
 };
 
 Vue.prototype.$api = api;

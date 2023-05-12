@@ -23,20 +23,6 @@ const common = {
     return arr;
   },
 
-  // 用户加入摄影圈
-  joinCircle(circle) {
-    const circleId = circle.circleId;
-    // backend - joinCircle用户加入摄影圈（circleId,userid) => 状态
-    const statusCode = 200;
-    if (statusCode === 200) {
-      Vue.prototype.$message({
-        message: `成功加入摄影圈${circle.name}`,
-        type: "success"
-      });
-    }
-    return statusCode;
-  },
-
   // 点赞帖子/取消点赞
   like(postId, flag, postList, userId) {
     // backend 更新帖子点赞状态(userid,postId,true)
@@ -63,7 +49,6 @@ const common = {
         });
       }
     });
-
     return postList;
   }
 };

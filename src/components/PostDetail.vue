@@ -57,7 +57,7 @@ export default {
   props: {
     postId: {
       required: true,
-      type: String
+      type: Number
     }
   },
   data() {
@@ -82,8 +82,8 @@ export default {
         author: "Abbylolo",
         avatarUrl: "",
         time: "2023年4月10日",
-        brief: "啦啦啦啦啦",
-        tags: ["阳光", "树木"],
+        brief: "挑个好天气一起去森林看看吧！",
+        tags: ["动物", "森林"],
         imgUrls: [
           "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
           "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"

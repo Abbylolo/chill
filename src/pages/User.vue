@@ -164,6 +164,7 @@ export default {
             message: res.data.msg,
             type: "success"
           });
+          this.getUserWorks();
         } else {
           this.$message({
             message: res.data.msg,
@@ -171,7 +172,6 @@ export default {
           });
         }
       });
-      this.getUserWorks();
     },
     // 获取用户作品集
     getUserWorks() {
@@ -201,15 +201,8 @@ export default {
           // backend - 删除帖子（id）=> 删除状态
           this.$api.deletePost({ postId: postId }).then(res => {
             if (res.data.code == 200) {
-              this.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-              this.postList = this.$common.arrRemoveJson(
-                this.postList,
-                "postId",
-                postId
-              );
+              this.$message("删除成功");
+              this.getUserWorks();
             } else {
               this.$message({
                 type: "error",
@@ -251,15 +244,24 @@ export default {
       const post = this.$refs.editPost.post;
       console.log("post", post);
       // backend - 编辑帖子（post，postId）=> 状态
-      this.$api.editPost({ postId, ...post }).then(res => {
-        if (res.data.code == 200) {
-          this.$message({
-            type: "success",
-            message: res.data.msg
-          });
-        }
-      });
-      this.getUserWorks();
+      this.$api
+        .editPost({
+          postId,
+          brief: post.brief,
+          cameraInfo: post.cameraInfo,
+          imgUrls: post.imgUrls,
+          parameter: post.parameter,
+          tags: post.tags
+        })
+        .then(res => {
+          if (res.data.code == 200) {
+            this.$message({
+              type: "success",
+              message: res.data.msg
+            });
+            this.getUserWorks();
+          }
+        });
     },
     move(postId, direction) {
       let flag = -1;

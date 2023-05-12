@@ -10,7 +10,7 @@
       <el-form-item label="头像">
         <el-upload
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="/api/common/uploadPic"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
@@ -50,20 +50,19 @@ export default {
     // 头像图片限制
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isLt3M = file.size / 1024 / 1024 < 3;
 
       if (!isJPG) {
         this.$message.error("上传头像图片只能是 JPG 格式!");
       }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+      if (!isLt3M) {
+        this.$message.error("上传头像图片大小不能超过 3MB!");
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt3M;
     },
     // 头像上传成功
     handleAvatarSuccess(res, file) {
-      console.log(res, file);
-      this.form.avatarUrl = URL.createObjectURL(file.raw);
+      this.form.avatarUrl = res.data;
     }
   },
   mounted() {

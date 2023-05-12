@@ -244,7 +244,7 @@ export default {
               instance.confirmButtonText = "执行中...";
               setTimeout(() => {
                 // 设置摄影圈信息
-                // backend - circleUpdate设置摄影圈（form）=> 摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介,状态）
+                // backend - circleUpdate设置摄影圈（form）=> 摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈圈友数，摄影圈简介,状态）
                 this.$message({
                   message: "设置摄影圈成功",
                   type: "success"
@@ -264,26 +264,47 @@ export default {
       });
     },
     // 加入摄影圈
-    joinCircle(circleInfo) {
-      const statusCode = this.$common.joinCircle(circleInfo);
-      if (statusCode === 200) {
+    async joinCircle(circleInfo) {
+      let { circleId, fans, name } = circleInfo;
+      if (fans == null) {
+        fans = [];
+      }
+      fans.push(this.userId.toString());
+      this.$api.changeCircleFans({ circleId, fans }).then(res => {
+        if (res.data.code == 200) {
+          this.$message({
+            message: `成功加入摄影圈"${name}"`,
+            type: "success"
+          });
+        }
         // 更新加入状态
         this.$set(this.circleInfo, "state", 1);
         // this.circleInfo = { ...this.circleInfo, state: 1 };
-      }
+        // this.getAllCircleList();
+      });
     },
     // 取消加入摄影圈
     cancelJoinCircle(circleInfo) {
-      // backend - 取消加入摄影圈cancelJoinCircle(userid,circleId) => 状态
-      const statusCode = 200;
-      if (statusCode === 200) {
-        // 更新加入状态
-        this.$set(this.circleInfo, "state", 0);
-        this.$message({
-          message: `取消加入摄影圈${circleInfo.name}`,
-          type: "success"
+      this.$confirm(`确认退出"${circleInfo.name}"摄影圈吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let { circleId, fans, name } = circleInfo;
+        if (fans == null) {
+          fans = [];
+        }
+        fans = fans.filter(item => item != this.userId.toString());
+        // backend - 取消加入摄影圈cancelJoinCircle(circleId,fans) => 状态
+        this.$api.changeCircleFans({ circleId, fans }).then(res => {
+          if (res.data.code == 200) {
+            this.$set(this.circleInfo, "fans", fans);
+            this.$set(this.circleInfo, "state", 0);
+            this.$message(`取消加入摄影圈${name}`);
+            // this.getAllCircleList();
+          }
         });
-      }
+      });
     },
     move(postId, direction) {
       let flag = -1;
@@ -311,7 +332,7 @@ export default {
       this.dialogVisible = false;
       const post = this.$refs.publishPost.post;
       console.log("post", post);
-      // backend - 摄影圈中发布帖子（post,userId,circleId）=> 状态
+      // backend - 摄影圈中发布帖子（...post,userId,circleId）=> 状态
       this.getpostList();
     }
   },

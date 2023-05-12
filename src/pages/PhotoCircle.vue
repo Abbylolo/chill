@@ -77,7 +77,7 @@
             >
               {{ item.name }}
             </p>
-            <p style="font-size: 12px; margin: 0;">{{ item.fansNum }}粉丝</p>
+            <p style="font-size: 12px; margin: 0;">{{ item.fansNum }}圈友</p>
             <p>简介：{{ item.brief }}</p>
           </div>
           <el-button type="warning" plain @click="joinCircle(item)"
@@ -96,6 +96,7 @@ export default {
   components: { CreateCircle },
   data() {
     return {
+      userId: 0,
       circleId: 1,
       // 我创立的摄影圈
       myCircleList: [],
@@ -119,8 +120,28 @@ export default {
   methods: {
     // 获取所有摄影圈列表
     getAllCircleList() {
-      // backend 获取摄影圈列表getAllCircleList() => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介,状态）
-      this.allCircleList = [
+      // 重置摄影圈列表
+      this.myCircleList = [];
+      this.joinedCircleList = [];
+      this.notJoinedCircleList = [];
+
+      // backend 获取摄影圈列表getAllCircleList() => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈圈友数，摄影圈简介,状态）
+      this.$api.getAllCircleList({ userId: this.userId }).then(res => {
+        if (res.data.code == 200) {
+          this.allCircleList = res.data.allCircleList;
+          // 根据状态对摄影圈进行归类
+          this.allCircleList.forEach(item => {
+            if (item.state == 2) {
+              this.myCircleList.push(item);
+            } else if (item.state == 1) {
+              this.joinedCircleList.push(item);
+            } else {
+              this.notJoinedCircleList.push(item);
+            }
+          });
+        }
+      });
+      /*  this.allCircleList = [
         {
           circleId: "1",
           avatarUrl:
@@ -168,18 +189,7 @@ export default {
           brief: "啦啦啦啦啦啦啦啦啦啦",
           state: 0
         }
-      ];
-
-      // 根据状态对摄影圈进行归类
-      this.allCircleList.forEach(item => {
-        if (item.state == 2) {
-          this.myCircleList.push(item);
-        } else if (item.state == 1) {
-          this.joinedCircleList.push(item);
-        } else {
-          this.notJoinedCircleList.push(item);
-        }
-      });
+      ]; */
     },
 
     // 打开创建摄影圈弹窗
@@ -208,18 +218,22 @@ export default {
             } else {
               instance.confirmButtonLoading = true;
               instance.confirmButtonText = "执行中...";
-              setTimeout(() => {
-                // 提交创建新摄影圈
-                // backend - circleCreate创建新摄影圈（userid,...form）=>摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈粉丝数，摄影圈简介,状态）
-                this.$message({
-                  message: "创立摄影圈成功",
-                  type: "success"
+              // 提交创建新摄影圈
+              // backend - circleCreate创建新摄影圈（userid,...form）=>摄影圈编号
+              this.$api
+                .createCircle({ userId: this.userId, ...form })
+                .then(res => {
+                  if (res.data.code == 200) {
+                    this.$message({
+                      type: "success",
+                      message: res.data.msg
+                    });
+                    // 如果创立成功更新摄影圈状态
+                    this.getAllCircleList();
+                  }
                 });
-                // 如果创立成功更新摄影圈状态
-                // this.myCircleList.push({res.data});
-                done();
-                instance.confirmButtonLoading = false;
-              }, 3000);
+              done();
+              instance.confirmButtonLoading = false;
             }
           } else {
             done();
@@ -230,20 +244,27 @@ export default {
       });
     },
     // 加入摄影圈
-    joinCircle(circle) {
-      const statusCode = this.$common.joinCircle(circle);
-      if (statusCode === 200) {
-        // 更新加入状态
-        this.joinedCircleList.push(circle);
-        this.notJoinedCircleList = this.$common.arrRemoveJson(
-          this.notJoinedCircleList,
-          "circleId",
-          circle.circleId
-        );
+    joinCircle(circleInfo) {
+      let { circleId, fans, name } = circleInfo;
+
+      if (fans == null) {
+        fans = [];
       }
+      fans.push(this.userId.toString());
+      // backend - joinCircle用户加入摄影圈（circleId,fans) => 状态
+      this.$api.changeCircleFans({ circleId, fans }).then(res => {
+        if (res.data.code == 200) {
+          this.$message({
+            message: `成功加入摄影圈"${name}"`,
+            type: "success"
+          });
+        }
+        this.getAllCircleList();
+      });
     }
   },
   mounted() {
+    this.userId = Number(window.sessionStorage.getItem("userId"));
     this.getAllCircleList();
   }
 };
