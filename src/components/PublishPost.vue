@@ -113,10 +113,10 @@ export default {
       const isLt7M = file.size / 1024 / 1024 < 7;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error("上传图片只能是 JPG 格式!");
       }
       if (!isLt7M) {
-        this.$message.error("上传头像图片大小不能超过 7MB!");
+        this.$message.error("上传图片大小不能超过 7MB!");
       }
       return isJPG && isLt7M;
     },

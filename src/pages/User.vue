@@ -100,7 +100,7 @@
       <publish-post ref="editPost"></publish-post>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="editPost(currentPostId)"
-          >发 布</el-button
+          >保 存</el-button
         >
       </span>
     </el-dialog>

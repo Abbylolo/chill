@@ -13,7 +13,7 @@
         type="warning"
         plain
         v-if="circleInfo.state == 2"
-        @click="circleUpdate()"
+        @click="updateCircle()"
         ><i class="el-icon-setting el-icon--left"></i>设置</el-button
       >
       <el-button
@@ -57,8 +57,26 @@
             <img class="avatar_user" :src="item.avatarUrl" alt="图片加载失败" />
             <span> {{ item.userName }}</span>
           </div>
-          <div style="font-size: 14px;height: 75px; margin-bottom: 15px;">
+          <div style="font-size: 14px;height: 35px; margin-bottom: 15px;">
             {{ item.brief }}
+          </div>
+          <div style="font-size: 12px;">
+            <div>
+              <img
+                src="@/assets/images/icons/camera.svg"
+                alt="图片加载失败"
+                style="height: 14px;"
+              />
+              <span>{{ item.cameraInfo }}</span>
+            </div>
+            <div>
+              <img
+                src="@/assets/images/icons/parameter.svg"
+                alt="图片加载失败"
+                style="height: 14px;"
+              />
+              <span>{{ item.parameter }}</span>
+            </div>
           </div>
           <div>
             <span class="likes" style="margin-right:10px; cursor: pointer;">
@@ -72,7 +90,7 @@
                 src="@/assets/images/icons/like.svg"
                 @click="$common.like(item.postId, true, postList, userId)"
               />
-              <span>{{ item.likes }}</span>
+              <span>{{ item.liker == null ? 0 : item.liker.length }}</span>
             </span>
             <!-- <span style="cursor: pointer;">
               <i class="el-icon-chat-dot-square el-icon--left"></i
@@ -149,72 +167,22 @@ export default {
     // 获取该摄影圈帖子列表
     getpostList() {
       // backend - 获取摄影圈帖子列表（摄影圈id）=》圈内帖子列表（id,用户名，用户头像，帖子简介，点赞数，评论，图片路径）
-      this.postList = [
-        {
-          postId: "0",
-          userName: "Abbylolo",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          brief:
-            "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
-          liked: true,
-          likes: 30,
-          comments: [
-            { userName: "xxx", avatarUrl: "xxx", content: "xxxx", time: "xxx" }
-          ],
-          imgUrls: [
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-          ]
-        },
-        {
-          postId: "1",
-          userName: "Syhn",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          brief: "简单介绍介绍介简单介绍绍",
-          liked: true,
-          likes: 30,
-          comments: ["aaa", "bbb"],
-          imgUrls: [
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-          ]
-        },
-        {
-          postId: "2",
-          userName: "Lihua",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          brief:
-            "简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介简单介绍介绍介绍",
-          liked: false,
-          likes: 30,
-          comments: ["aaa", "bbb"],
-          imgUrls: [
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-          ]
-        }
-      ];
-      this.postList.forEach(item => {
-        item.translateX = 0;
-      });
+      this.$api
+        .getCirclePostList({
+          circleId: this.circleInfo.circleId,
+          userId: this.userId
+        })
+        .then(res => {
+          if (res.data.code == 200) {
+            this.postList = res.data.data;
+          }
+          this.postList.forEach(item => {
+            item.translateX = 0;
+          });
+        });
     },
     // 设置摄影圈信息
-    circleUpdate() {
+    updateCircle() {
       const h = this.$createElement;
       const formInit = {
         name: this.circleInfo.name,
@@ -227,7 +195,7 @@ export default {
           ref: "createCircle"
         }),
         showCancelButton: true,
-        confirmButtonText: "创建",
+        confirmButtonText: "保存",
         cancelButtonText: "取消",
         beforeClose: (action, instance, done) => {
           const form = this.$refs.createCircle.form || {};
@@ -242,18 +210,25 @@ export default {
             } else {
               instance.confirmButtonLoading = true;
               instance.confirmButtonText = "执行中...";
-              setTimeout(() => {
-                // 设置摄影圈信息
-                // backend - circleUpdate设置摄影圈（form）=> 摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈圈友数，摄影圈简介,状态）
-                this.$message({
-                  message: "设置摄影圈成功",
-                  type: "success"
+              // 设置摄影圈信息
+              // backend - updateCircle设置摄影圈（form）=> 摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈圈友数，摄影圈简介,状态）
+              this.$api
+                .updateCircle({
+                  ...form,
+                  circleId: this.circleInfo.circleId
+                })
+                .then(res => {
+                  if (res.data.code == 200) {
+                    this.$message({
+                      message: "设置摄影圈成功",
+                      type: "success"
+                    });
+                  }
                 });
-                // 如果设置成功更新摄影圈信息
-                // this.circleInfo = res.data;
-                done();
-                instance.confirmButtonLoading = false;
-              }, 3000);
+              // 如果设置成功更新摄影圈信息
+              // this.circleInfo = res.data;
+              done();
+              instance.confirmButtonLoading = false;
             }
           } else {
             done();
@@ -329,11 +304,29 @@ export default {
     },
     // 点击发布帖子
     post() {
-      this.dialogVisible = false;
+      this.showPost = false;
       const post = this.$refs.publishPost.post;
-      console.log("post", post);
       // backend - 摄影圈中发布帖子（...post,userId,circleId）=> 状态
-      this.getpostList();
+      this.$api
+        .addPost({
+          ...post,
+          userId: this.userId,
+          circleId: this.circleInfo.circleId
+        })
+        .then(res => {
+          if (res.data.code == 200) {
+            this.$message({
+              message: res.data.msg,
+              type: "success"
+            });
+            this.getpostList();
+          } else {
+            this.$message({
+              message: res.data.msg,
+              type: "error"
+            });
+          }
+        });
     }
   },
   mounted() {
