@@ -19,16 +19,32 @@
             @click="
               $router.push({
                 name: 'PhotoCircleDetail',
-                params: { circleInfo: item }
+                params: { circleId: item.circleId }
               })
             "
           >
             {{ item.name }}
           </p>
         </div>
-        <el-button type="info" round @click="openCreateCircleMsg()"
+        <el-button
+          type="info"
+          round
+          @click="showCreateCircle = true"
+          class="create"
           ><i class="el-icon-plus el-icon--left"></i>创建</el-button
         >
+        <!-- 创建摄影圈弹窗 -->
+        <el-dialog
+          title="创建摄影圈"
+          :visible.sync="showCreateCircle"
+          width="40%"
+          :destroy-on-close="true"
+        >
+          <create-circle ref="createCircle"></create-circle>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="createCircle()">创 建</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
     <!-- 我加入的摄影圈 -->
@@ -50,7 +66,7 @@
             @click="
               $router.push({
                 name: 'PhotoCircleDetail',
-                params: { circleInfo: item }
+                params: { circleId: item.circleId }
               })
             "
           >
@@ -71,7 +87,7 @@
               @click="
                 $router.push({
                   name: 'PhotoCircleDetail',
-                  params: { circleInfo: item }
+                  params: { circleId: item.circleId }
                 })
               "
             >
@@ -98,6 +114,7 @@ export default {
     return {
       userId: 0,
       circleId: 1,
+      showCreateCircle: false,
       // 我创立的摄影圈
       myCircleList: [],
       // 我加入的摄影圈
@@ -191,57 +208,30 @@ export default {
         }
       ]; */
     },
-
-    // 打开创建摄影圈弹窗
-    openCreateCircleMsg() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: "创建摄影圈",
-        message: h("create-circle", { ref: "createCircle" }),
-        showCancelButton: true,
-        confirmButtonText: "创建",
-        cancelButtonText: "取消",
-        beforeClose: (action, instance, done) => {
-          const form = this.$refs.createCircle.form || {
-            name: "",
-            brief: "",
-            avatarUrl: ""
-          };
-          console.log("form:", form);
-          if (action === "confirm") {
-            if (form.name == "" || form.brief == "") {
-              this.$message({
-                message: "请输入摄影圈名称及简介",
-                type: "warning"
-              });
-              done();
-            } else {
-              instance.confirmButtonLoading = true;
-              instance.confirmButtonText = "执行中...";
-              // 提交创建新摄影圈
-              // backend - circleCreate创建新摄影圈（userid,...form）=>摄影圈编号
-              this.$api
-                .createCircle({ userId: this.userId, ...form })
-                .then(res => {
-                  if (res.data.code == 200) {
-                    this.$message({
-                      type: "success",
-                      message: res.data.msg
-                    });
-                    // 如果创立成功更新摄影圈状态
-                    this.getAllCircleList();
-                  }
-                });
-              done();
-              instance.confirmButtonLoading = false;
-            }
-          } else {
-            done();
+    // 创建摄影圈
+    createCircle() {
+      const form = this.$refs.createCircle.form || {};
+      console.log("form:", form);
+      if (form.name == "" || form.brief == "") {
+        this.$message({
+          message: "请输入摄影圈名称及简介",
+          type: "warning"
+        });
+      } else {
+        // 提交创建新摄影圈
+        // backend - circleCreate创建新摄影圈（userid,...form）=>摄影圈编号
+        this.$api.createCircle({ userId: this.userId, ...form }).then(res => {
+          if (res.data.code == 200) {
+            this.$message({
+              type: "success",
+              message: res.data.msg
+            });
+            // 如果创立成功更新摄影圈状态
+            this.getAllCircleList();
           }
-        }
-      }).then(action => {
-        this.$refs.createCircle.form = { name: "", brief: "", avatarUrl: "" };
-      });
+        });
+        this.showCreateCircle = false;
+      }
     },
     // 加入摄影圈
     joinCircle(circleInfo) {
@@ -348,7 +338,7 @@ img {
   border-radius: 7px;
 }
 
-.my_circle_detail .el-button {
+.create {
   right: 80px;
   position: absolute;
 }

@@ -28,7 +28,8 @@ export default {
   name: "CreateCircle",
   props: {
     formInit: {
-      type: Object
+      type: Object,
+      required: false
     }
   },
   data() {
@@ -66,7 +67,9 @@ export default {
     }
   },
   mounted() {
-    console.log(this.formInit, "ss");
+    if (this.formInit) {
+      this.form = this.formInit;
+    }
   }
 };
 </script>

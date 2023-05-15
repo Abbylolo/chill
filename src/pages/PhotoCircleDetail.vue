@@ -13,13 +13,28 @@
         type="warning"
         plain
         v-if="circleInfo.state == 2"
-        @click="updateCircle()"
+        @click="showUpdateCircle()"
         ><i class="el-icon-setting el-icon--left"></i>设置</el-button
       >
+      <!-- 设置摄影圈弹窗 -->
+      <el-dialog
+        title="设置摄影圈"
+        :visible.sync="showCircleDetail"
+        width="40%"
+        :destroy-on-close="true"
+      >
+        <create-circle
+          ref="circleDetail"
+          :formInit="circleInfo"
+        ></create-circle>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="updateCircle()">保 存</el-button>
+        </span>
+      </el-dialog>
       <el-button
         type="warning"
         plain
-        v-if="circleInfo.state == 1"
+        v-if="circleInfo.state == 1 || circleInfo.state == 2"
         @click="showPost = true"
         ><i class="el-icon-plus el-icon--left"></i>发布帖子</el-button
       >
@@ -139,8 +154,9 @@ export default {
   data() {
     return {
       userId: 0,
+      circleId: 7,
       showPost: false,
-      state: "",
+      showCircleDetail: false,
       circleInfo: {
         circleId: "",
         avatarUrl: "",
@@ -164,6 +180,21 @@ export default {
     };
   },
   methods: {
+    // 获取摄影圈详情
+    getCircleDetail() {
+      this.$api.getAllCircleList({ userId: this.userId }).then(res => {
+        if (res.data.code == 200) {
+          this.allCircleList = res.data.allCircleList;
+          this.allCircleList.forEach(item => {
+            if (item.circleId == this.circleId) {
+              this.circleInfo = item;
+              return;
+            }
+          });
+          this.getpostList();
+        }
+      });
+    },
     // 获取该摄影圈帖子列表
     getpostList() {
       // backend - 获取摄影圈帖子列表（摄影圈id）=》圈内帖子列表（id,用户名，用户头像，帖子简介，点赞数，评论，图片路径）
@@ -181,62 +212,37 @@ export default {
           });
         });
     },
+    showUpdateCircle() {
+      this.showCircleDetail = true;
+    },
     // 设置摄影圈信息
     updateCircle() {
-      const h = this.$createElement;
-      const formInit = {
-        name: this.circleInfo.name,
-        brief: this.circleInfo.brief,
-        avatarUrl: this.circleInfo.avatarUrl
-      };
-      this.$msgbox({
-        title: "设置摄影圈",
-        message: h("create-circle", {
-          ref: "createCircle"
-        }),
-        showCancelButton: true,
-        confirmButtonText: "保存",
-        cancelButtonText: "取消",
-        beforeClose: (action, instance, done) => {
-          const form = this.$refs.createCircle.form || {};
-          console.log("form:", form);
-          if (action === "confirm") {
-            if (form.name == "" || form.brief == "") {
+      const form = this.$refs.circleDetail.form || {};
+      if (form.name == "" || form.brief == "") {
+        this.$message({
+          message: "请输入摄影圈名称及简介",
+          type: "warning"
+        });
+      } else {
+        // 设置摄影圈信息
+        // backend - updateCircle设置摄影圈（form）=> 摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈圈友数，摄影圈简介,状态）
+        this.$api
+          .updateCircle({
+            ...form,
+            circleId: this.circleInfo.circleId
+          })
+          .then(res => {
+            if (res.data.code == 200) {
               this.$message({
-                message: "请输入摄影圈名称及简介",
-                type: "warning"
+                message: "设置摄影圈成功",
+                type: "success"
               });
-              done();
-            } else {
-              instance.confirmButtonLoading = true;
-              instance.confirmButtonText = "执行中...";
-              // 设置摄影圈信息
-              // backend - updateCircle设置摄影圈（form）=> 摄影圈信息（摄影圈id，摄影圈头像，摄影圈名字，摄影圈圈友数，摄影圈简介,状态）
-              this.$api
-                .updateCircle({
-                  ...form,
-                  circleId: this.circleInfo.circleId
-                })
-                .then(res => {
-                  if (res.data.code == 200) {
-                    this.$message({
-                      message: "设置摄影圈成功",
-                      type: "success"
-                    });
-                  }
-                });
-              // 如果设置成功更新摄影圈信息
-              // this.circleInfo = res.data;
-              done();
-              instance.confirmButtonLoading = false;
             }
-          } else {
-            done();
-          }
-        }
-      }).then(action => {
-        this.$refs.createCircle.form = { name: "", brief: "", avatarUrl: "" };
-      });
+          });
+        // 如果设置成功更新摄影圈信息
+        this.getCircleDetail();
+        this.showCircleDetail = false;
+      }
     },
     // 加入摄影圈
     async joinCircle(circleInfo) {
@@ -332,15 +338,8 @@ export default {
   mounted() {
     // this.userId = this.$store.state.userId;
     this.userId = Number(window.sessionStorage.getItem("userId"));
-    this.circleInfo = this.$route.params.circleInfo || {
-      circleId: "",
-      avatarUrl: "",
-      name: "",
-      fansNum: 0,
-      brief: ""
-    };
-    this.state = this.$route.params.state || "";
-    this.getpostList();
+    this.circleId = this.$route.params.circleId || 0;
+    this.getCircleDetail();
   }
 };
 </script>

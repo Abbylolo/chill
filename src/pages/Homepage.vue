@@ -73,7 +73,7 @@
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
-          :page-size="20"
+          :page-size="pageSize"
           layout="total, prev, pager, next"
           :total="totalNum"
         >
@@ -92,6 +92,7 @@ export default {
     return {
       userId: 0,
       totalNum: 0, //帖子总数
+      pageSize: 20,
       currentPage: 1,
       showPostDetail: false,
       keyword: "",
@@ -104,8 +105,8 @@ export default {
   },
   methods: {
     // 搜索图片
-    searchPics(keyword, pageNum) {
-      // backend 通过图片关键词获取图片组(keyword,pageNum) => postList、帖子总数
+    searchPics(keyword) {
+      // backend 通过图片关键词获取图片组(keyword,this.currentPage,this.pageSize) => postList、帖子总数
       console.log("keyword", keyword);
       this.postList = [
         {
