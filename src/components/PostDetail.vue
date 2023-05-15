@@ -15,10 +15,10 @@
       <!-- 帖子信息 -->
       <div>
         <div class="author_info">
-          <img src="@/assets/images/icons/avatar.svg" />
+          <img :src="post.avatarUrl" />
           <div>
-            <div>{{ post.author }}</div>
-            <div>{{ post.time }}</div>
+            <div>{{ post.userName }}</div>
+            <div>{{ post.createTime }}</div>
           </div>
         </div>
         <div class="brief">
@@ -63,9 +63,9 @@ export default {
   data() {
     return {
       post: {
-        author: "",
+        userName: "",
         avatarUrl: "",
-        time: "",
+        createTime: "",
         brief: "",
         tags: [""],
         imgUrls: [""],
@@ -78,19 +78,11 @@ export default {
     // 获取摄影贴详情
     getPostDetail() {
       // backend - 获取摄影贴详情（摄影贴postId）=》摄影贴详情
-      this.post = {
-        author: "Abbylolo",
-        avatarUrl: "",
-        time: "2023年4月10日",
-        brief: "挑个好天气一起去森林看看吧！",
-        tags: ["动物", "森林"],
-        imgUrls: [
-          "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
-        ],
-        cameraInfo: "Canan",
-        parameter: "曝光:100; 色调:80;"
-      };
+      this.$api.getPostDetail({ postId: this.postId }).then(res => {
+        if (res.data.code == 200) {
+          this.post = res.data.data;
+        }
+      });
     }
   },
   mounted() {

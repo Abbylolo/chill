@@ -36,18 +36,11 @@
           :src="post.imgUrl"
           class="image__lazy"
           alt="图片加载失败"
-          @click="showPostDetail = true"
+          @click="
+            showPostDetail = true;
+            clickPostId = post.postId;
+          "
         />
-        <!-- 摄影贴详情弹窗 -->
-        <el-dialog
-          title="摄影贴详情"
-          :visible.sync="showPostDetail"
-          width="80%"
-          :before-close="postDetailClose"
-        >
-          <post-detail :postId="post.postId"></post-detail>
-        </el-dialog>
-
         <div class="likes">
           <img
             v-if="post.liked"
@@ -63,10 +56,8 @@
         </div>
         <div class="author_info">
           <!-- <img src="@/assets/images/icons/avatar.svg" /> -->
-          <img
-            src="https://chill-pic.oss-cn-hangzhou.aliyuncs.com/bca24ceb1b5a13a48c5e97861dadf562.jpg"
-          />
-          {{ post.author }}
+          <img :src="post.avatarUrl" />
+          {{ post.userName }}
         </div>
       </div>
       <div class="block">
@@ -80,6 +71,17 @@
         </el-pagination>
       </div>
     </main>
+    <!-- 摄影贴详情弹窗 -->
+    <div v-if="showPostDetail">
+      <el-dialog
+        title="摄影贴详情"
+        :visible.sync="showPostDetail"
+        width="80%"
+        :before-close="postDetailClose"
+      >
+        <post-detail :postId="clickPostId"></post-detail>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -90,6 +92,7 @@ export default {
   components: { PostDetail },
   data() {
     return {
+      clickPostId: 0,
       userId: 0,
       totalNum: 0, //帖子总数
       pageSize: 20,
@@ -99,7 +102,7 @@ export default {
       listKeyword: "全部",
       keywordList: ["全部", "自然", "人物", "景观", "花卉"],
       postList: [
-        { imgUrl: "", author: "", avatarUrl: "", liker: [], liked: false }
+        { imgUrl: "", userName: "", avatarUrl: "", liker: [], liked: false }
       ] // 帖子信息：图片url、作者头像及姓名、帖子点赞数、是否已点赞
     };
   },
@@ -244,6 +247,7 @@ main {
   width: 20px;
   height: 20px;
   margin-bottom: -3px;
+  border-radius: 10px;
 }
 
 .author_info {
