@@ -25,11 +25,11 @@ export default new Router({
       }
     },
     {
-      path: "/photo-circle-detail",
+      path: "/photo-circle-detail/:circleId",
       name: "PhotoCircleDetail",
       component: PhotoCircleDetail,
       meta: {
-        title: "摄影圈"
+        title: "摄影圈详情页"
       }
     },
     {
