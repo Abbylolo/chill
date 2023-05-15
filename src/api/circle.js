@@ -67,6 +67,17 @@ const circle = {
       method: "post",
       data
     });
+  },
+  // 删除摄影圈
+  deleteCircle(data) {
+    return request({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "/api/circle/deleteCircle",
+      method: "post",
+      data
+    });
   }
 };
 

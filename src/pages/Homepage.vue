@@ -17,7 +17,7 @@
           v-for="(item, index) in keywordList"
           :key="index"
           v-model="listKeyword"
-          @input="searchPics()"
+          @input="searchPics(listKeyword)"
         >
           <el-radio
             :label="item"

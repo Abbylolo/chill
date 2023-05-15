@@ -12,28 +12,6 @@
       <el-button
         type="warning"
         plain
-        v-if="circleInfo.state == 2"
-        @click="showUpdateCircle()"
-        ><i class="el-icon-setting el-icon--left"></i>设置</el-button
-      >
-      <!-- 设置摄影圈弹窗 -->
-      <el-dialog
-        title="设置摄影圈"
-        :visible.sync="showCircleDetail"
-        width="40%"
-        :destroy-on-close="true"
-      >
-        <create-circle
-          ref="circleDetail"
-          :formInit="circleInfo"
-        ></create-circle>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="updateCircle()">保 存</el-button>
-        </span>
-      </el-dialog>
-      <el-button
-        type="warning"
-        plain
         v-if="circleInfo.state == 1 || circleInfo.state == 2"
         @click="showPost = true"
         ><i class="el-icon-plus el-icon--left"></i>发布帖子</el-button
@@ -50,6 +28,38 @@
           <el-button type="primary" @click="post()">发 布</el-button>
         </span>
       </el-dialog>
+      <el-button
+        type="warning"
+        plain
+        v-if="circleInfo.state == 2"
+        @click="showUpdateCircle()"
+        style="margin-left: 10px;"
+        ><i class="el-icon-setting el-icon--left"></i>设置</el-button
+      >
+      <el-button
+        type="warning"
+        plain
+        v-if="circleInfo.state == 2"
+        style="margin-right: 10px;"
+        @click="deleteCircle()"
+        ><i class="el-icon-delete el-icon--left"></i>删除</el-button
+      >
+      <!-- 设置摄影圈弹窗 -->
+      <el-dialog
+        title="设置摄影圈"
+        :visible.sync="showCircleDetail"
+        width="40%"
+        :destroy-on-close="true"
+      >
+        <create-circle
+          ref="circleDetail"
+          :formInit="circleInfo"
+        ></create-circle>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="updateCircle()">保 存</el-button>
+        </span>
+      </el-dialog>
+
       <el-button
         type="warning"
         plain
@@ -180,6 +190,29 @@ export default {
     };
   },
   methods: {
+    // 删除摄影圈
+    deleteCircle() {
+      this.$confirm("确认解散摄影圈吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$api.deleteCircle({ circleId: this.circleId }).then(res => {
+          if (res.data.code == 200) {
+            this.$message(`${this.circleInfo.name}摄影圈解散`);
+            // 跳转回摄影圈页面
+            this.$router.push({
+              name: "PhotoCircle"
+            });
+          } else {
+            this.$message({
+              type: "error",
+              message: res.data.msg
+            });
+          }
+        });
+      });
+    },
     // 获取摄影圈详情
     getCircleDetail() {
       this.$api.getAllCircleList({ userId: this.userId }).then(res => {
