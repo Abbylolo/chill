@@ -2,6 +2,17 @@ import request from "./request";
 
 /* 摄影贴模块接口 */
 const post = {
+  // 根据关键词搜索摄影贴
+  getPostListByKeyword(data) {
+    return request({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "/api/post/getPostListByKeyword",
+      method: "post",
+      data
+    });
+  },
   // 获取用户摄影贴列表
   getUserPostList(data) {
     return request({
