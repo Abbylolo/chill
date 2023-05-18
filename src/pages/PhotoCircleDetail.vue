@@ -1,6 +1,11 @@
 <template>
   <div class="bac">
     <header>
+      <img
+        src="@/assets/images/icons/goback.svg"
+        class="go_back"
+        @click="$router.push({ name: 'PhotoCircle' })"
+      />
       <img class="avatar" :src="circleInfo.avatarUrl" alt="图片加载失败" />
       <div class="circle_info">
         <div>
@@ -190,6 +195,8 @@ export default {
     };
   },
   methods: {
+    // 返回摄影圈主页
+    goBack() {},
     // 删除摄影圈
     deleteCircle() {
       this.$confirm("确认解散摄影圈吗?", "提示", {
@@ -378,6 +385,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.go_back {
+  height: 25px;
+  cursor: pointer;
+  margin-top: -125px;
+  margin-left: 5px;
+}
+
 .bac {
   width: 100%;
   min-height: 92.8vh;
