@@ -220,6 +220,8 @@ main {
   position: absolute;
   top: 30%;
   margin: 10px 20px;
+  width: 98%;
+  height: 70%;
 }
 
 .image__lazy {
