@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <!-- 我创立的摄影圈 -->
-    <div class="my_circle_wrap">
+    <div class="my_circle_wrap" v-show="userId">
       <div class="title_bar">我创立的摄影圈</div>
       <div class="my_circle_detail">
         <div v-if="myCircleList.length == 0">
@@ -48,7 +48,7 @@
       </div>
     </div>
     <!-- 我加入的摄影圈 -->
-    <div class="my_circle_wrap">
+    <div class="my_circle_wrap" v-show="userId">
       <div class="title_bar">我加入的摄影圈</div>
       <div class="my_circle_detail">
         <div v-if="joinedCircleList.length == 0">
@@ -96,7 +96,11 @@
             <p style="font-size: 12px; margin: 0;">{{ item.fansNum }}圈友</p>
             <p>简介：{{ item.brief }}</p>
           </div>
-          <el-button type="warning" plain @click="joinCircle(item)"
+          <el-button
+            type="warning"
+            plain
+            @click="joinCircle(item)"
+            v-show="userId"
             ><i class="el-icon-plus el-icon--left"></i>加入</el-button
           >
         </div>
