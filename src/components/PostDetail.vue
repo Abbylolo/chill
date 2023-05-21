@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="brief">
-          <div style="font-weight: bold;">简介：</div>
+          <div style="font-weight: bold;width:50px">简介：</div>
           <div>
             <div style="margin-bottom: 10px;">{{ post.brief }}</div>
             <div>
@@ -114,6 +114,7 @@ main {
   display: flex;
   flex-direction: row;
   margin: 30px 0px 0px 6px;
+  text-align: left;
 }
 
 /* 走马灯样式 */
