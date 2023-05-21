@@ -112,7 +112,12 @@
           <div>
             <span class="likes" style="margin-right:10px; cursor: pointer;">
               <img
-                v-if="item.liked"
+                v-if="!userId"
+                src="@/assets/images/icons/liked.svg"
+                style="cursor:default;"
+              />
+              <img
+                v-else-if="item.liked"
                 src="@/assets/images/icons/liked.svg"
                 @click="$common.like(item.postId, false, postList, userId)"
               />
