@@ -76,7 +76,7 @@
         type="warning"
         plain
         v-if="circleInfo.state == 0"
-        v-show="userId"
+        :style="{ visibility: userId ? '' : 'hidden' }"
         @click="joinCircle(circleInfo)"
         ><i class="el-icon-plus el-icon--left"></i>加入</el-button
       >

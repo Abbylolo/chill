@@ -100,7 +100,7 @@
             type="warning"
             plain
             @click="joinCircle(item)"
-            v-show="userId"
+            :style="{ visibility: userId ? '' : 'hidden' }"
             ><i class="el-icon-plus el-icon--left"></i>加入</el-button
           >
         </div>
