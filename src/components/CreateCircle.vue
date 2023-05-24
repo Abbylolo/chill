@@ -2,10 +2,17 @@
   <div>
     <el-form :model="form" :rules="rules" ref="form" label-width="80px">
       <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.name" maxlength="10" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="简介" prop="brief">
-        <el-input type="textarea" v-model="form.brief"></el-input>
+        <el-input
+          type="textarea"
+          v-model="form.brief"
+          :rows="5"
+          maxlength="200"
+          show-word-limit
+          resize="none"
+        ></el-input>
       </el-form-item>
       <el-form-item label="头像">
         <el-upload
@@ -75,6 +82,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.avatar-uploader {
+  display: flex;
+}
+
 /deep/ .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;

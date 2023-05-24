@@ -28,8 +28,26 @@
           <div style="font-size: 22px;font-weight: bold; margin: 18px 0;">
             {{ item.createTime.split("日")[0] + "日" }}
           </div>
-          <div style="font-size: 14px;height: 75px; margin-bottom: 15px;">
+          <div style="font-size: 14px;height: 50px; margin-bottom: 15px;">
             {{ item.brief }}
+          </div>
+          <div style="font-size: 12px; margin-bottom: 5px;">
+            <div>
+              <img
+                src="@/assets/images/icons/camera.svg"
+                alt="图片加载失败"
+                style="height: 14px;"
+              />
+              <span>{{ item.cameraInfo }}</span>
+            </div>
+            <div>
+              <img
+                src="@/assets/images/icons/parameter.svg"
+                alt="图片加载失败"
+                style="height: 14px;"
+              />
+              <span>{{ item.parameter }}</span>
+            </div>
           </div>
           <div>
             <span class="likes" style="margin-right:10px; cursor: pointer;">

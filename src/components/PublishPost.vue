@@ -47,12 +47,24 @@
         设备信息
         <img src="@/assets/images/icons/camera.svg" alt="图片加载失败" />
       </p>
-      <el-input v-model="post.cameraInfo" clearable> </el-input>
+      <el-input
+        v-model="post.cameraInfo"
+        clearable
+        maxlength="50"
+        show-word-limit
+      >
+      </el-input>
       <p>
         照片调参
         <img src="@/assets/images/icons/parameter.svg" alt="图片加载失败" />
       </p>
-      <el-input v-model="post.parameter" clearable> </el-input>
+      <el-input
+        v-model="post.parameter"
+        clearable
+        maxlength="100"
+        show-word-limit
+      >
+      </el-input>
     </div>
     <div class="right">
       <el-upload
