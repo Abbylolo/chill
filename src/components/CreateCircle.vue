@@ -75,7 +75,7 @@ export default {
   },
   mounted() {
     if (this.formInit) {
-      this.form = this.formInit;
+      this.form = Object.assign({}, this.formInit);
     }
   }
 };
