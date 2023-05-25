@@ -195,6 +195,10 @@ export default {
     },
     // 获取用户作品集
     getUserWorks() {
+      const loading = this.$loading({
+        lock: true,
+        target: "main"
+      });
       // backend 获取用户作品集（userid) => 作品id，创建时间，作品简介,图片地址s
       this.$api.getUserPostList({ userId: this.userInfo.userId }).then(res => {
         if (res.data.code == 200) {
@@ -208,6 +212,9 @@ export default {
             type: "error"
           });
         }
+        setTimeout(() => {
+          loading.close();
+        }, 500);
       });
     },
     // 删除帖子

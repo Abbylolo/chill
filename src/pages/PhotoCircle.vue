@@ -51,7 +51,7 @@
     <!-- 我加入的摄影圈 -->
     <div class="my_circle_wrap" v-show="userId">
       <div class="title_bar">我加入的摄影圈</div>
-      <div class="my_circle_detail">
+      <div class="my_circle_detail my_joined">
         <div v-if="joinedCircleList.length == 0">
           <span>还没有加入摄影圈喔！</span>
         </div>
@@ -147,6 +147,18 @@ export default {
       this.joinedCircleList = [];
       this.notJoinedCircleList = [];
 
+      const loading1 = this.$loading({
+        lock: true,
+        target: ".circle_list"
+      });
+      const loading2 = this.$loading({
+        lock: true,
+        target: ".my_circle_detail"
+      });
+      const loading3 = this.$loading({
+        lock: true,
+        target: ".my_joined"
+      });
       // backend 获取摄影圈列表getAllCircleList() => 摄影圈列表（摄影圈id，摄影圈头像，摄影圈名字，摄影圈圈友数，摄影圈简介,状态）
       this.$api.getAllCircleList({ userId: this.userId }).then(res => {
         if (res.data.code == 200) {
@@ -162,56 +174,10 @@ export default {
             }
           });
         }
+        loading1.close();
+        loading2.close();
+        loading3.close();
       });
-      /*  this.allCircleList = [
-        {
-          circleId: "1",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "汪星人保护队",
-          fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦",
-          state: 1
-        },
-        {
-          circleId: "2",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          name: "喵星人保护队",
-          fansNum: 3000,
-          brief:
-            "咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦",
-          state: 0
-        },
-        {
-          circleId: "3",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "喵星人保护队",
-          fansNum: 3000,
-          brief:
-            "咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦咯啦啦啦咯哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦咯啦啦啦咯哦哦哦哦哦哦哦哦哦",
-          state: 2
-        },
-        {
-          circleId: "4",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "汪星人保护队",
-          fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦",
-          state: 0
-        },
-        {
-          circleId: "5",
-          avatarUrl:
-            "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          name: "汪星人保护队",
-          fansNum: 2000,
-          brief: "啦啦啦啦啦啦啦啦啦啦",
-          state: 0
-        }
-      ]; */
     },
     // 创建摄影圈
     createCircle() {

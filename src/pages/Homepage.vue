@@ -31,6 +31,9 @@
     </header>
     <!-- 主页面 -->
     <main>
+      <div v-if="postList.length == 0">
+        暂无相关摄影贴
+      </div>
       <div class="images_show" v-for="(post, index) in postList" :key="index">
         <img
           :src="post.imgUrl"
@@ -65,7 +68,7 @@
           {{ post.userName }}
         </div>
       </div>
-      <div class="block">
+      <div class="block" v-show="postList.length != 0">
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
@@ -116,7 +119,10 @@ export default {
     // 搜索图片
     searchPics(keyword) {
       // backend 通过图片关键词获取图片组(keyword,this.currentPage,this.pageSize) => postList、帖子总数
-      console.log("keyword", keyword);
+      const loading = this.$loading({
+        lock: true,
+        target: "main"
+      });
       this.$api
         .getPostListByKeyword({
           userId: this.userId,
@@ -129,6 +135,7 @@ export default {
             this.postList = res.data.postList;
             this.totalNum = res.data.totalNum;
           }
+          loading.close();
         });
     },
     // 关闭摄影贴详情
@@ -279,5 +286,9 @@ main {
 
 /deep/ .el-dialog {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.3);
+}
+
+/deep/.el-pager li.active {
+  color: #b9b400;
 }
 </style>
