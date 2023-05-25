@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex;">
     <div class="left">
-      <p>作品简介</p>
+      <p style="margin-top:0">作品简介</p>
       <el-input
         type="textarea"
         :rows="3"
@@ -13,7 +13,7 @@
       >
       </el-input>
       <p>作品标签</p>
-      <div style="display: flex;">
+      <div style="text-align: left;">
         <el-tag
           :key="index"
           v-for="(tag, index) in post.tags"
@@ -23,7 +23,7 @@
         >
           {{ tag }}
         </el-tag>
-        <div v-show="post.tags.length <= 9">
+        <div v-show="post.tags.length < 9">
           <el-input
             class="input-new-tag"
             v-if="inputVisible"
@@ -182,7 +182,7 @@ export default {
   width: 30%;
   height: 50vh;
   padding: 20px;
-  margin: 0 30px;
+  margin-right: 30px;
 }
 
 .left > p {
@@ -200,6 +200,6 @@ export default {
 }
 
 /deep/.el-tag {
-  margin-right: 8px;
+  margin: 0 0px 5px 5px;
 }
 </style>

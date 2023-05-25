@@ -160,6 +160,8 @@ export default {
     this.isLogin = window.sessionStorage.getItem("userId");
     this.userName = window.sessionStorage.getItem("username");
     this.avatarUrl = window.sessionStorage.getItem("avatarUrl");
+    console.log("this.$route", this.$route);
+    // this.activeIndex = this.$route.path;
   }
 };
 </script>
