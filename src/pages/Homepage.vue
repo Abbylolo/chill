@@ -269,6 +269,7 @@ main {
   left: 12px;
   bottom: -7px;
   height: 30px;
+  font-family: monospace;
 }
 
 .images_show {
