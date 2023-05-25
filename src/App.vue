@@ -69,6 +69,7 @@
         width="35%"
         :modal="false"
         :destroy-on-close="true"
+        :close-on-click-modal="false"
       >
         <login @loginRes="loginRes"></login>
       </el-dialog>

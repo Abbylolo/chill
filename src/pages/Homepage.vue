@@ -83,6 +83,7 @@
         :visible.sync="showPostDetail"
         width="80%"
         :before-close="postDetailClose"
+        :close-on-click-modal="false"
       >
         <post-detail :postId="clickPostId"></post-detail>
       </el-dialog>

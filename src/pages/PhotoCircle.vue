@@ -39,6 +39,7 @@
           :visible.sync="showCreateCircle"
           width="40%"
           :destroy-on-close="true"
+          :close-on-click-modal="false"
         >
           <create-circle ref="createCircle"></create-circle>
           <span slot="footer" class="dialog-footer">

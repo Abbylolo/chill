@@ -27,6 +27,7 @@
         :visible.sync="showPost"
         width="70%"
         :destroy-on-close="true"
+        :close-on-click-modal="false"
       >
         <publish-post ref="publishPost"></publish-post>
         <span slot="footer" class="dialog-footer">
@@ -55,6 +56,7 @@
         :visible.sync="showCircleDetail"
         width="40%"
         :destroy-on-close="true"
+        :close-on-click-modal="false"
       >
         <create-circle
           ref="circleDetail"
