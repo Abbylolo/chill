@@ -135,6 +135,8 @@ export default {
     // 上传图片组成功
     handlePictureSuccess(res, file) {
       const fileName = res.data;
+      console.log("fileName", fileName);
+      console.log("res", res);
       if (res.code == "200") {
         let imgUrls = this.post.imgUrls;
         imgUrls.push(fileName);

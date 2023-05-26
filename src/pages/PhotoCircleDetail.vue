@@ -286,9 +286,9 @@ export default {
                 type: "success"
               });
             }
+            this.getCircleDetail();
           });
         // 如果设置成功更新摄影圈信息
-        this.getCircleDetail();
         this.showCircleDetail = false;
       }
     },

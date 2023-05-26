@@ -109,7 +109,7 @@ export default {
       showPostDetail: false,
       keyword: "",
       listKeyword: "全部",
-      keywordList: ["全部", "自然", "人物", "景观", "花卉"],
+      keywordList: ["全部", "自然", "人物", "动物", "花卉"],
       postList: [
         { imgUrl: "", userName: "", avatarUrl: "", liker: [], liked: false }
       ] // 帖子信息：图片url、作者头像及姓名、帖子点赞数、是否已点赞
@@ -135,7 +135,9 @@ export default {
             this.postList = res.data.postList;
             this.totalNum = res.data.totalNum;
           }
-          loading.close();
+          setTimeout(() => {
+            loading.close();
+          }, 300);
         });
     },
     // 关闭摄影贴详情
