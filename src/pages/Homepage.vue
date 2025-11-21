@@ -3,13 +3,29 @@
     <!-- 头部 -->
     <header>
       <div class="white-mask"></div>
-      <el-input placeholder="搜索图片" v-model="keyword" class="search" maxlength="20" @change="searchPics">
+      <el-input
+        placeholder="搜索图片"
+        v-model="keyword"
+        class="search"
+        maxlength="20"
+        @change="searchPics"
+      >
         <i slot="suffix" class="el-input__icon el-icon-search"></i>
       </el-input>
       <div class="keywordList">
-        <el-radio-group v-for="(item, index) in keywordList" :key="index" v-model="listKeyword"
-          @input="searchPics(listKeyword)">
-          <el-radio :label="item" border size="small" style="margin-right: 5px;">{{ item }}</el-radio>
+        <el-radio-group
+          v-for="(item, index) in keywordList"
+          :key="index"
+          v-model="listKeyword"
+          @input="searchPics(listKeyword)"
+        >
+          <el-radio
+            :label="item"
+            border
+            size="small"
+            style="margin-right: 5px;"
+            >{{ item }}</el-radio
+          >
         </el-radio-group>
       </div>
     </header>
@@ -20,10 +36,15 @@
       </div>
       <div class="masonry-container">
         <div class="images_show" v-for="(post, index) in postList" :key="index">
-          <img :src="post.imgUrl" class="image__lazy" alt="图片加载失败" @click="
+          <img
+            :src="post.imgUrl"
+            class="image__lazy"
+            alt="图片加载失败"
+            @click="
               showPostDetail = true;
               clickPostId = post.postId;
-            " />
+            "
+          />
           <div class="card-footer">
             <div class="author_info">
               <!-- <img src="@/assets/images/icons/avatar.svg" /> -->
@@ -31,26 +52,46 @@
               <span>{{ post.userName }}</span>
             </div>
             <div class="likes">
-              <img v-if="!userId" src="@/assets/images/icons/liked.svg" style="cursor:default;" />
-              <img v-else-if="post.liked" src="@/assets/images/icons/liked.svg"
-                @click="$common.like(post.postId, false, postList, userId)" />
-              <img v-else src="@/assets/images/icons/like.svg"
-                @click="$common.like(post.postId, true, postList, userId)" />
+              <img
+                v-if="!userId"
+                src="@/assets/images/icons/liked.svg"
+                style="cursor:default;"
+              />
+              <img
+                v-else-if="post.liked"
+                src="@/assets/images/icons/liked.svg"
+                @click="$common.like(post.postId, false, postList, userId)"
+              />
+              <img
+                v-else
+                src="@/assets/images/icons/like.svg"
+                @click="$common.like(post.postId, true, postList, userId)"
+              />
               <span>{{ post.liker.length }}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="block" v-show="postList.length != 0">
-        <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize"
-          layout="total, prev, pager, next" :total="totalNum">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next"
+          :total="totalNum"
+        >
         </el-pagination>
       </div>
     </main>
     <!-- 摄影贴详情弹窗 -->
     <div v-if="showPostDetail">
-      <el-dialog title="摄影贴详情" :visible.sync="showPostDetail" width="80%" :before-close="postDetailClose"
-        :close-on-click-modal="false">
+      <el-dialog
+        title="摄影贴详情"
+        :visible.sync="showPostDetail"
+        width="80%"
+        :before-close="postDetailClose"
+        :close-on-click-modal="false"
+      >
         <post-detail :postId="clickPostId"></post-detail>
       </el-dialog>
     </div>
@@ -209,6 +250,7 @@ main::-webkit-scrollbar {
 .masonry-container {
   column-count: 5;
   column-gap: 15px;
+  // column-rule: 1px solid #e5e5e5;
   width: 100%;
 }
 
@@ -222,6 +264,7 @@ main::-webkit-scrollbar {
 
 .images_show {
   break-inside: avoid;
+  -webkit-break-inside: avoid;
   page-break-inside: avoid;
   display: inline-block;
   position: relative;
@@ -231,7 +274,7 @@ main::-webkit-scrollbar {
   overflow: hidden;
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
-  transition: all .3s
+  transition: all 0.3s;
 }
 
 .images_show img {
